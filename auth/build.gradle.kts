@@ -1,3 +1,10 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
+val facebookAppId: String = gradleLocalProperties(rootDir).getProperty("FACEBOOK_APP_ID")
+val facebookClientToken: String = gradleLocalProperties(rootDir).getProperty("FACEBOOK_CLIENT_TOKEN")
+val fbLoginProtocolScheme: String = gradleLocalProperties(rootDir).getProperty("FB_LOGIN_PROTOCOL_SCHEME")
+val googleSignToken: String = gradleLocalProperties(rootDir).getProperty("GOOGLE_SIGN_TOKEN")
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -15,6 +22,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        resValue("string", "FACEBOOK_APP_ID", facebookAppId)
+        resValue("string", "FACEBOOK_CLIENT_TOKEN", facebookClientToken)
+        resValue("string", "FB_LOGIN_PROTOCOL_SCHEME", fbLoginProtocolScheme)
+        buildConfigField("String", "GOOGLE_SIGN_TOKEN", "\"${googleSignToken}\"")
     }
 
     buildTypes {
