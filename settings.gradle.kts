@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "visionplus-bss-android"
 include(":app")
+include(":auth")
