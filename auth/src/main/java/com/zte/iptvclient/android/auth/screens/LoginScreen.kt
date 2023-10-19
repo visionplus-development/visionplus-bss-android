@@ -65,7 +65,7 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen(
+internal fun LoginScreen(
     clickGoogle: () -> Unit,
     callbackManager: CallbackManager,
     onLoginResult: (loginResult: LoginResult?) -> Unit,
@@ -99,7 +99,7 @@ fun LoginScreen(
 }
 
 @Composable
-fun ButtonLogin() {
+internal fun ButtonLogin() {
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -124,7 +124,7 @@ fun ButtonLogin() {
 }
 
 @Composable
-fun TextSwitchRegister() {
+internal fun TextSwitchRegister() {
     Row(modifier = Modifier.padding(all = 16.dp)) {
         Text(
             text = "Have not created an account? ",
@@ -141,7 +141,7 @@ fun TextSwitchRegister() {
 }
 
 @Composable
-fun TextSocialLogin() {
+internal fun TextSocialLogin() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -173,7 +173,7 @@ fun TextSocialLogin() {
 }
 
 @Composable
-fun TextTNC() {
+internal fun TextTNC() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -214,7 +214,7 @@ fun TextTNC() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomToolbar(
+internal fun CustomToolbar(
     title: String,
     onBackClick: () -> Unit
 ) {
@@ -253,7 +253,7 @@ fun CustomToolbar(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabLayout() {
+internal fun TabLayout() {
     val isActive = remember { mutableIntStateOf(0) }
 
     val coroutineScope = rememberCoroutineScope()
@@ -318,14 +318,14 @@ fun TabLayout() {
     }
 }
 
-data class ImageTabItem(
+internal data class ImageTabItem(
     val text: String,//Tab Title
     val screen: @Composable () -> Unit//Tab Screen(can also take params)
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PhoneLogin() {
+internal fun PhoneLogin() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -397,7 +397,7 @@ fun PhoneLogin() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmailLogin() {
+internal fun EmailLogin() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -467,7 +467,7 @@ fun EmailLogin() {
 
 
 @Composable
-fun GridSocialLoginScreen(
+internal fun GridSocialLoginScreen(
     clickGoogle: () -> Unit,
     callbackManager: CallbackManager,
     onLoginResult: (loginResult: LoginResult?) -> Unit
@@ -519,7 +519,7 @@ fun GridSocialLoginScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GridItem(text: String, painter: Painter, modifier: Modifier = Modifier, onClick: () -> Unit) {
+internal fun GridItem(text: String, painter: Painter, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

@@ -4,6 +4,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun ChangePasswordScreen() {
+internal fun ChangePasswordScreen() {
     Text(text = "CHANGE PASSWORD SCREEN")
 }

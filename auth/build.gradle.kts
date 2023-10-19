@@ -1,9 +1,7 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
-val facebookAppId: String = gradleLocalProperties(rootDir).getProperty("FACEBOOK_APP_ID")
-val facebookClientToken: String = gradleLocalProperties(rootDir).getProperty("FACEBOOK_CLIENT_TOKEN")
-val fbLoginProtocolScheme: String = gradleLocalProperties(rootDir).getProperty("FB_LOGIN_PROTOCOL_SCHEME")
-val googleSignToken: String = gradleLocalProperties(rootDir).getProperty("GOOGLE_SIGN_TOKEN")
+val FACEBOOK_APP_ID: String by project
+val FB_LOGIN_PROTOCOL_SCHEME: String by project
+val FACEBOOK_CLIENT_TOKEN: String by project
+val GOOGLE_SIGN_TOKEN: String by project
 
 plugins {
     id("com.android.library")
@@ -23,10 +21,10 @@ android {
             useSupportLibrary = true
         }
 
-        resValue("string", "FACEBOOK_APP_ID", facebookAppId)
-        resValue("string", "FACEBOOK_CLIENT_TOKEN", facebookClientToken)
-        resValue("string", "FB_LOGIN_PROTOCOL_SCHEME", fbLoginProtocolScheme)
-        buildConfigField("String", "GOOGLE_SIGN_TOKEN", "\"${googleSignToken}\"")
+        resValue("string", "FACEBOOK_APP_ID", FACEBOOK_APP_ID)
+        resValue("string", "FACEBOOK_CLIENT_TOKEN", FACEBOOK_CLIENT_TOKEN)
+        resValue("string", "FB_LOGIN_PROTOCOL_SCHEME", FB_LOGIN_PROTOCOL_SCHEME)
+        buildConfigField("String", "GOOGLE_SIGN_TOKEN", "\"${GOOGLE_SIGN_TOKEN}\"")
     }
 
     buildTypes {
