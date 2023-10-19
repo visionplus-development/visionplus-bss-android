@@ -12,7 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.zte.iptvclient.android.auth.ui.theme.VisionplusbssandroidTheme
 
-class AuthActivity : ComponentActivity() {
+internal class AuthActivity : ComponentActivity() {
+
+    companion object {
+        const val PAGE_TYPE = "page_type"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
