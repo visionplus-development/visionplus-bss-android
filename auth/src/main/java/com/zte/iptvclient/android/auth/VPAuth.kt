@@ -109,7 +109,7 @@ object VPAuth {
     fun logoutGoogle(activity: Activity) {
         // todo: refactor GoogleSignInOptions to singleton object.
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("605370014437-utsvrp74kb9lgkk6drlt1ce5h1rda2cp.apps.googleusercontent.com")
+            .requestIdToken(BuildConfig.GOOGLE_SIGN_TOKEN)
             .requestEmail()
             .build()
         val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(activity, gso)
