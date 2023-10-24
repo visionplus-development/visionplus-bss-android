@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_auth">AuthActivity</string>
+    <string name="login">Masuk</string>
+    <string name="label_created_account">Belum punya akun? </string>
+    <string name="label_phone_number">Nomor Telfon</string>
+    <string name="label_email">Email</string>
+    <string name="register">Daftar</string>
+    <string name="label_forgot_password">"Lupa Password?"</string>
+</resources>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,8 +19,14 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -38,21 +45,35 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.facebook.CallbackManager
@@ -71,15 +92,14 @@ internal fun LoginScreen(
     onLoginResult: (loginResult: LoginResult?) -> Unit,
     clickBack: () -> Unit,
 ) {
+    var phoneNumber by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
             CustomToolbar(
-                title = "Login",
+                title = stringResource(id = R.string.login),
                 onBackClick = clickBack
             )
-        },
-        bottomBar = {
-            ButtonLogin()
         },
         content = {
             Column(
@@ -89,17 +109,29 @@ internal fun LoginScreen(
                     .background(Color.Black),
             ) {
                 TextSwitchRegister()
-                TabLayout()
+                TabLayout(
+                    phoneNumber = phoneNumber,
+                    password = password,
+                    onPhoneNumberChange = {
+                        phoneNumber = it
+                    },
+                    onPasswordChange = {
+                        password = it
+                    })
                 TextSocialLogin()
                 GridSocialLoginScreen(clickGoogle, callbackManager, onLoginResult)
                 TextTNC()
             }
-        }
+        },
+        bottomBar = {
+            ButtonLogin(phoneNumber, password)
+        },
     )
 }
 
 @Composable
-internal fun ButtonLogin() {
+internal fun ButtonLogin(phoneNumber: String, password: String) {
+    val isEnable = phoneNumber.isNotEmpty() && password.isNotEmpty()
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -109,14 +141,16 @@ internal fun ButtonLogin() {
                 end = 16.dp,
                 bottom = 16.dp
             ),
+        enabled = isEnable,
         colors = ButtonDefaults.buttonColors(
+            disabledContainerColor = Color(0x3307E3D0),
             containerColor = Color(0xFF07E3D0)
         ),
         shape = RoundedCornerShape(8.dp),
         onClick = {
         }) {
         Text(
-            text = "LOGIN",
+            text = stringResource(id = R.string.login),
             fontSize = 14.sp,
             color = Color(0xFF1F1F1F)
         )
@@ -127,12 +161,12 @@ internal fun ButtonLogin() {
 internal fun TextSwitchRegister() {
     Row(modifier = Modifier.padding(all = 16.dp)) {
         Text(
-            text = "Have not created an account? ",
+            text = stringResource(id = R.string.label_created_account) + " ",
             color = Color(0xFF7D7D7D),
-            fontSize = 13.sp
+            fontSize = 12.sp
         )
         ClickableText(
-            text = AnnotatedString("Register"),
+            text = AnnotatedString(stringResource(id = R.string.register)),
             style = TextStyle(color = Color(0xFF07E3D0), fontSize = 13.sp),
             onClick = {
             }
@@ -145,7 +179,7 @@ internal fun TextSocialLogin() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(vertical = 24.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -159,7 +193,7 @@ internal fun TextSocialLogin() {
         Text(
             text = "or continue with",
             textAlign = TextAlign.Center,
-            fontSize = 13.sp,
+            fontSize = 12.sp,
             color = Color(0xFFFCFCFC),
         )
         Divider(
@@ -183,29 +217,37 @@ internal fun TextTNC() {
         Text(
             text = "By logging in, I agree with",
             color = Color(0xFF7D7D7D),
-            fontSize = 13.sp
+            fontSize = 12.sp
         )
         Row {
             ClickableText(
                 text = AnnotatedString("Terms & Conditions "),
-                style = TextStyle(color = Color(0xFF07E3D0), fontSize = 13.sp),
+                style = TextStyle(
+                    color = Color(0xFF07E3D0),
+                    fontSize = 12.sp,
+                    textDecoration = TextDecoration.Underline
+                ),
                 onClick = {
                 }
             )
             Text(
                 text = "and ",
                 color = Color(0xFF7D7D7D),
-                fontSize = 13.sp
+                fontSize = 12.sp
             )
             ClickableText(
                 text = AnnotatedString("Privacy Policy "),
-                style = TextStyle(color = Color(0xFF07E3D0), fontSize = 13.sp),
+                style = TextStyle(
+                    color = Color(0xFF07E3D0),
+                    fontSize = 12.sp,
+                    textDecoration = TextDecoration.Underline
+                ),
                 onClick = {
                 }
             )
             Text(
                 text = "from Vision+ ",
-                fontSize = 13.sp,
+                fontSize = 12.sp,
                 color = Color(0xFF7D7D7D),
             )
         }
@@ -232,7 +274,7 @@ internal fun CustomToolbar(
                     text = title,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 14.sp
                 )
             },
             navigationIcon = {
@@ -253,7 +295,12 @@ internal fun CustomToolbar(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun TabLayout() {
+internal fun TabLayout(
+    phoneNumber: String,
+    password: String,
+    onPhoneNumberChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit
+) {
     val isActive = remember { mutableIntStateOf(0) }
 
     val coroutineScope = rememberCoroutineScope()
@@ -261,11 +308,11 @@ internal fun TabLayout() {
 
     val tabRowItems = listOf(
         ImageTabItem(
-            text = "Phone Number",
-            screen = { PhoneLogin() }
+            text = stringResource(id = R.string.label_phone_number),
+            screen = { PhoneLogin(phoneNumber, password, onPhoneNumberChange, onPasswordChange) }
         ),
         ImageTabItem(
-            text = "Email",
+            text = stringResource(id = R.string.label_email),
             screen = { EmailLogin() }
         ),
     )
@@ -325,14 +372,24 @@ internal data class ImageTabItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun PhoneLogin() {
+internal fun PhoneLogin(
+    phoneNumber: String,
+    password: String,
+    onPhoneNumberChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit
+) {
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 20.dp, horizontal = 12.dp),
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = "Enter Phone Number",
             textAlign = TextAlign.Start,
             color = Color(0xFFF5F5F5),
@@ -340,57 +397,136 @@ internal fun PhoneLogin() {
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp)
+                .height(50.dp),
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFF202020),
                 cursorColor = Color.Black,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
-            value = "",
+            value = phoneNumber,
+            textStyle = TextStyle(
+                color = Color(0xFFFFFFFF),
+                fontSize = 12.sp
+            ),
+            singleLine = true,
+            leadingIcon = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.indonesia_flag),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    Text(
+                        text = "+62",
+                        color = Color(0xFF919999),
+                        fontSize = 12.sp
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        tint = Color.White,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 4.dp, top = 4.dp, end = 8.dp, bottom = 4.dp)
+                    )
+                }
+            },
             placeholder = {
                 Text(
                     text = "Phone number (ex: 085812345678)",
-                    color = Color(0xFF919999)
+                    color = Color(0xFF919999),
+                    fontSize = 12.sp
                 )
             },
-            onValueChange = {},
+            onValueChange = {
+                if (it.isNullOrEmpty()) {
+                    onPasswordChange("")
+                }
+                onPhoneNumberChange(it)
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            )
         )
 
         Text(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = "Enter Password",
             textAlign = TextAlign.Start,
-            color = Color(0xFFF5F5F5),
+            color = if (phoneNumber.isNullOrEmpty()) Color(0xFF919999) else Color(0xFFF5F5F5),
             fontSize = 14.sp
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp)
+                .height(50.dp),
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFF202020),
                 cursorColor = Color.Black,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
-            value = "",
+            textStyle = TextStyle(
+                color = Color(0xFFFFFFFF),
+                fontSize = 12.sp
+            ),
+            value = password,
+            enabled = phoneNumber.isNotEmpty(),
+            singleLine = true,
             placeholder = {
                 Text(
                     text = "Password",
+                    fontSize = 12.sp,
                     color = Color(0xFF919999)
                 )
             },
-            onValueChange = {},
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            onValueChange = {
+                onPasswordChange(it)
+            },
+
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Password),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            trailingIcon = {
+                val image = if (passwordVisible)
+                    painterResource(id = R.drawable.visibility_on)
+                else painterResource(id = R.drawable.visibility_off)
+
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        painter = image,
+                        "icon",
+                        Modifier.size(25.dp),
+                        tint = Color(0xFF919999)
+                    )
+                }
+            }
         )
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Forgot Password?",
+            text = stringResource(id = R.string.label_forgot_password),
             textAlign = TextAlign.End,
             color = Color(0xFF919999),
-            fontSize = 14.sp
+            fontSize = 12.sp
         )
     }
 }
@@ -404,7 +540,9 @@ internal fun EmailLogin() {
             .padding(vertical = 20.dp, horizontal = 12.dp),
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = "Enter Email",
             textAlign = TextAlign.Start,
             color = Color(0xFFF5F5F5),
@@ -412,7 +550,9 @@ internal fun EmailLogin() {
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFF202020),
                 cursorColor = Color.Black,
@@ -430,7 +570,9 @@ internal fun EmailLogin() {
         )
 
         Text(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = "Enter Password",
             textAlign = TextAlign.Start,
             color = Color(0xFFF5F5F5),
@@ -438,7 +580,9 @@ internal fun EmailLogin() {
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 42.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 42.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFF202020),
                 cursorColor = Color.Black,

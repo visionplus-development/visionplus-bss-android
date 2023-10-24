@@ -1,3 +1,9 @@
 <resources>
     <string name="title_activity_auth">AuthActivity</string>
+    <string name="login">Login</string>
+    <string name="label_created_account">Dont have an account?</string>
+    <string name="label_phone_number">Phone Number</string>
+    <string name="label_email">Email</string>
+    <string name="register">Register</string>
+    <string name="label_forgot_password">"Forgot Password?"</string>
 </resources>
