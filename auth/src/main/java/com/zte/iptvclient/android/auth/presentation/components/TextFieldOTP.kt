@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextOTP(
+fun TextFieldOTP(
     modifier: Modifier,
     label: String,
     countdown: String,
@@ -197,8 +197,8 @@ fun TextOTP(
 
 @Preview(showBackground = true)
 @Composable
-fun TextOTPPreview() {
-    TextOTP(
+fun TextFieldOTPPreview() {
+    TextFieldOTP(
         modifier = Modifier
             .fillMaxWidth()
             .padding(

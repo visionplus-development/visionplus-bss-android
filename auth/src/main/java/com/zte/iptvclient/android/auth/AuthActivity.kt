@@ -18,8 +18,8 @@ import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.zte.iptvclient.android.auth.presentation.pages.ChangePasswordScreen
 import com.zte.iptvclient.android.auth.presentation.pages.EmailVerificationScreen
+import com.zte.iptvclient.android.auth.presentation.pages.ForgotPasswordPage
 import com.zte.iptvclient.android.auth.presentation.pages.LoginScreen
 import com.zte.iptvclient.android.auth.presentation.pages.OtpScreen
 import com.zte.iptvclient.android.auth.presentation.pages.RegisterScreen
@@ -106,8 +106,8 @@ internal class AuthActivity : ComponentActivity() {
                             RegisterScreen()
                         }
 
-                        PageType.CHANGE_PASSWORD.name -> {
-                            ChangePasswordScreen()
+                        PageType.FORGOT_PASSWORD.name -> {
+                            ForgotPasswordPage()
                         }
 
                         PageType.RESET_PASSWORD.name -> {
