@@ -18,13 +18,13 @@ import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.zte.iptvclient.android.auth.screens.ChangePasswordScreen
-import com.zte.iptvclient.android.auth.screens.EmailVerificationScreen
-import com.zte.iptvclient.android.auth.screens.LoginScreen
-import com.zte.iptvclient.android.auth.screens.OtpScreen
-import com.zte.iptvclient.android.auth.screens.RegisterScreen
-import com.zte.iptvclient.android.auth.screens.ResetPasswordScreen
-import com.zte.iptvclient.android.auth.ui.theme.VisionplusbssandroidTheme
+import com.zte.iptvclient.android.auth.presentation.pages.ChangePasswordScreen
+import com.zte.iptvclient.android.auth.presentation.pages.EmailVerificationScreen
+import com.zte.iptvclient.android.auth.presentation.pages.LoginScreen
+import com.zte.iptvclient.android.auth.presentation.pages.OtpScreen
+import com.zte.iptvclient.android.auth.presentation.pages.RegisterScreen
+import com.zte.iptvclient.android.auth.presentation.pages.ResetPasswordScreen
+import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
 import com.zte.iptvclient.android.auth.utils.PageType
 import com.zte.iptvclient.android.auth.utils.Result
 

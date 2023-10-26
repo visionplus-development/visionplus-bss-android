@@ -1,4 +1,4 @@
-package com.zte.iptvclient.android.auth.screens
+package com.zte.iptvclient.android.auth.presentation.pages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

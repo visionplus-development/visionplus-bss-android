@@ -1,4 +1,4 @@
-package com.zte.iptvclient.android.auth.screens
+package com.zte.iptvclient.android.auth.presentation.pages
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -484,7 +484,7 @@ internal fun GridSocialLoginScreen(
         ) {
             GridItem(
                 text = "Google",
-                painter = painterResource(id = R.drawable.gmail),
+                painter = painterResource(id = R.drawable.ic_gmail),
                 modifier = Modifier.weight(1f),
                 onClick = {
                     clickGoogle()
@@ -492,7 +492,7 @@ internal fun GridSocialLoginScreen(
             )
             GridItem(
                 text = "Facebook",
-                painter = painterResource(id = R.drawable.facebook),
+                painter = painterResource(id = R.drawable.ic_facebook),
                 modifier = Modifier.weight(1f),
                 onClick = {
                     val loginButton = LoginButton(context)

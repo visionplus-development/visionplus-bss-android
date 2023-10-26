@@ -1,4 +1,4 @@
-package com.zte.iptvclient.android.auth.ui.theme
+package com.zte.iptvclient.android.auth.presentation.theme
 
 import android.app.Activity
 import android.os.Build
