@@ -106,7 +106,7 @@ fun TabFormPreview() {
             .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color(0xFF141414)),
-        tabPhone = { FormEmail() },
-        tabEmail = { FormEmail() }
+        tabPhone = {  },
+        tabEmail = {  }
     )
 }

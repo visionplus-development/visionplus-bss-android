@@ -72,7 +72,7 @@ object VPAuth {
     /**
      * Open change password page
      */
-    fun changePassword(context: Context, startActivityResult: ActivityResultLauncher<Intent>) {
+    fun forgotPassword(context: Context, startActivityResult: ActivityResultLauncher<Intent>) {
         val intent = Intent(context, AuthActivity::class.java).apply {
             putExtra(AuthActivity.PAGE_TYPE, PageType.FORGOT_PASSWORD.name)
         }
