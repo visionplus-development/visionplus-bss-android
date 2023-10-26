@@ -1,4 +1,4 @@
-package com.zte.iptvclient.android.auth.screens
+package com.zte.iptvclient.android.auth.presentation.pages
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
