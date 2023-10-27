@@ -37,6 +37,10 @@ import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
 @Composable
 fun ForgotPasswordPage() {
     var email by remember { mutableStateOf("") }
+    var otpNum1 by remember { mutableStateOf("") }
+    var otpNum2 by remember { mutableStateOf("") }
+    var otpNum3 by remember { mutableStateOf("") }
+    var otpNum4 by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
 
     Scaffold(
@@ -64,7 +68,60 @@ fun ForgotPasswordPage() {
                             .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color(0xFF141414)),
+                        onTabClick = {
+                            email = ""
+                            otpNum1 = ""
+                            otpNum2 = ""
+                            otpNum3 = ""
+                            otpNum4 = ""
+                        },
                         tabPhone = {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = 16.dp,
+                                        vertical = 16.dp
+                                    )
+                            ) {
+                                TextFieldOTP(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 16.dp),
+                                    onSendOTP = {
+                                    },
+                                    label = "Get OTP or Link Click",
+                                    countdown = "",
+                                    isEnabled = true,
+                                    value1 = otpNum1,
+                                    value2 = otpNum2,
+                                    value3 = otpNum3,
+                                    value4 = otpNum4,
+                                    onValueChange1 = {
+                                        otpNum1 = it
+                                    },
+                                    onValueChange2 = {
+                                        otpNum2 = it
+                                    },
+                                    onValueChange3 = {
+                                        otpNum3 = it
+                                    },
+                                    onValueChange4 = {
+                                        otpNum4 = it
+                                    },
+                                    keyboardOptions = remember {
+                                        KeyboardOptions(
+                                            keyboardType = KeyboardType.Number,
+                                            imeAction = ImeAction.Next
+                                        )
+                                    },
+                                    keyboardActions = KeyboardActions(
+                                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                                    )
+                                )
+                            }
+                        },
+                        tabEmail = {
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -84,7 +141,7 @@ fun ForgotPasswordPage() {
                                     },
                                     keyboardOptions = remember {
                                         KeyboardOptions(
-                                            keyboardType = KeyboardType.Phone,
+                                            keyboardType = KeyboardType.Email,
                                             imeAction = ImeAction.Next
                                         )
                                     },
@@ -95,25 +152,45 @@ fun ForgotPasswordPage() {
                                 TextFieldOTP(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(bottom = 16.dp)
-                                    ,
+                                        .padding(bottom = 16.dp),
+                                    onSendOTP = {
+                                    },
                                     label = "Get OTP or Link Click",
-                                    countdown = "02:25",
+                                    countdown = "",
                                     isEnabled = true,
-                                    num1 = "",
-                                    num2 = "",
-                                    num3 = "",
-                                    num4 = ""
+                                    value1 = otpNum1,
+                                    value2 = otpNum2,
+                                    value3 = otpNum3,
+                                    value4 = otpNum4,
+                                    onValueChange1 = {
+                                        otpNum1 = it
+                                    },
+                                    onValueChange2 = {
+                                        otpNum2 = it
+                                    },
+                                    onValueChange3 = {
+                                        otpNum3 = it
+                                    },
+                                    onValueChange4 = {
+                                        otpNum4 = it
+                                    },
+                                    keyboardOptions = remember {
+                                        KeyboardOptions(
+                                            keyboardType = KeyboardType.Number,
+                                            imeAction = ImeAction.Next
+                                        )
+                                    },
+                                    keyboardActions = KeyboardActions(
+                                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                                    )
                                 )
                             }
-
-                        },
-                        tabEmail = { }
+                        }
                     )
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 32.dp),
+                            .padding(horizontal = 42.dp),
                         text = "We will send the verification code to your email address.",
                         color = Color(0xFF919999),
                         fontSize = 12.sp,

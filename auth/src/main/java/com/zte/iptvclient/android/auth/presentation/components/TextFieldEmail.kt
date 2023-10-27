@@ -30,7 +30,7 @@ fun TextFieldEmail(
     value: String,
     onValueChange: (value: String) -> Unit,
     keyboardOptions: KeyboardOptions = remember { KeyboardOptions.Default },
-    keyboardActions: KeyboardActions = KeyboardActions(),
+    keyboardActions: KeyboardActions = KeyboardActions()
 ) {
     Column(
         modifier = modifier

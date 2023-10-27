@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TabForm(
     modifier: Modifier,
+    onTabClick: () -> Unit,
     tabPhone: @Composable () -> Unit,
     tabEmail: @Composable () -> Unit
 ) {
@@ -75,6 +76,7 @@ fun TabForm(
                     },
                     selected = pagerState.currentPage == index,
                     onClick = {
+                        onTabClick()
                         isActive.intValue = index
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     }
@@ -106,7 +108,8 @@ fun TabFormPreview() {
             .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color(0xFF141414)),
-        tabPhone = {  },
-        tabEmail = {  }
+        onTabClick = { },
+        tabPhone = { },
+        tabEmail = { }
     )
 }
