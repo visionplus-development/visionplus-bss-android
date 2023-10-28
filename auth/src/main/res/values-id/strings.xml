@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_auth">AuthActivity</string>
+    <string name="label_login">Masuk</string>
+    <string name="label_created_account">Belum punya akun? </string>
+    <string name="label_phone_number">Nomor telepon</string>
+    <string name="label_email">Email</string>
+    <string name="label_register">Daftar</string>
+    <string name="label_forgot_password">Lupa Password?</string>
+    <string name="label_google">GOOGLE</string>
+    <string name="label_facebook">FACEBOOK</string>
+    <string name="label_divider">atau lanjut dengan</string>
+    <string name="label_agreement_login">Dengan masuk, Saya setuju dengan</string>
+    <string name="label_agreement_register">Dengan mengklik daftar, saya setuju dengan</string>
+    <string name="label_terms_condition">Syarat &amp; Ketentuan</string>
+    <string name="label_and">dan</string>
+    <string name="label_privacy_policy">Kebijakan Privasi</string>
+    <string name="label_from_visonplus">dari Vision+</string>
+    <string name="label_enter_phone_number">Masukkan Nomor Telepon</string>
+    <string name="placeholder_phone_number">Nomor telepon (ex: 085812345678)</string>
+    <string name="label_enter_password">Masukkan Password</string>
+    <string name="label_password">Password</string>
+    <string name="label_enter_email">Masukkan Email</string>
+    <string name="placeholder_email">"Email (mail@gmail.com)"</string>
+    <string name="label_send_otp">Kirim OTP</string>
+    <string name="label_get_otp">Minta OTP</string>
+    <string name="label_resend_otp">Kirim ulang</string>
+    <string name="label_or">atau</string>
+    <string name="label_click_link">klik Link</string>
+    <string name="placeholder_password">e.g. placeholder</string>
+    <string name="verify_success">Email kamu sudah diverifikasi</string>
+</resources>

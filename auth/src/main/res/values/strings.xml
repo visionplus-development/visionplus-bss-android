@@ -1,3 +1,31 @@
 <resources>
     <string name="title_activity_auth">AuthActivity</string>
+    <string name="label_login">Login</string>
+    <string name="label_created_account">Dont have an account?</string>
+    <string name="label_phone_number">Phone Number</string>
+    <string name="label_email">Email</string>
+    <string name="label_register">Register</string>
+    <string name="label_forgot_password">Forgot Password?</string>
+    <string name="label_google">GOOGLE</string>
+    <string name="label_facebook">FACEBOOK</string>
+    <string name="label_divider">or continue with</string>
+    <string name="label_agreement_login">By logging in, I agree with</string>
+    <string name="label_agreement_register">By clicking register, I agree with</string>
+    <string name="label_terms_condition">Terms &amp; Conditions</string>
+    <string name="label_and">and</string>
+    <string name="label_privacy_policy">Privacy Policy</string>
+    <string name="label_from_visonplus">from Vision+</string>
+    <string name="label_enter_phone_number">Enter Phone Number</string>
+    <string name="placeholder_phone_number">Phone number (ex: 085812345678)</string>
+    <string name="label_enter_password">Enter Password</string>
+    <string name="label_password">Password</string>
+    <string name="label_enter_email">Enter Email</string>
+    <string name="placeholder_email">"Email (mail@gmail.com)"</string>
+    <string name="label_send_otp">Send OTP</string>
+    <string name="label_get_otp">Get OTP</string>
+    <string name="label_resend_otp">Resend in</string>
+    <string name="label_or">or</string>
+    <string name="label_click_link">click Link</string>
+    <string name="placeholder_password">e.g. placeholder</string>
+    <string name="verify_success">Your email has been verified</string>
 </resources>
