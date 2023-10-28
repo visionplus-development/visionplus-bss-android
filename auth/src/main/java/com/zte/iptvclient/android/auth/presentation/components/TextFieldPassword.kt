@@ -2,13 +2,13 @@ package com.zte.iptvclient.android.auth.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -20,15 +20,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.zte.iptvclient.android.auth.R
+import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
+import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundTextField
+import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,66 +42,61 @@ fun TextFieldPassword(
     onPasswordChange: (String) -> Unit,
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    VisionplusbssandroidTheme {
+        Column(
+            modifier = modifier,
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (isEnabled) ColorTextPrimary else ColorTextSecondary,
+                textAlign = TextAlign.Start
+            )
 
-    Column(
-        modifier = modifier,
-    ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            text = label,
-            textAlign = TextAlign.Start,
-            color = if (isEnabled) Color(0xFFF5F5F5) else Color(0xFF919999),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.W500
-        )
-
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            value = password,
-            onValueChange = { onPasswordChange(it) },
-            shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xFF202020),
-                cursorColor = Color.Black,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
-            ),
-            textStyle = TextStyle(
-                color = Color(0xFFFFFFFF),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.W400
-            ),
-            placeholder = {
-                Text(
-                    text = placeHolder,
-                    fontSize = 12.sp,
-                    color = Color(0xFF919999)
-                )
-            },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val image = if (passwordVisible) {
-                    painterResource(id = R.drawable.ic_visibility_on)
-                } else {
-                    painterResource(id = R.drawable.ic_visibility_off)
-                }
-
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        painter = image,
-                        "password visibility",
-                        Modifier.size(24.dp),
-                        tint = Color(0xFF919999)
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = password,
+                onValueChange = { onPasswordChange(it) },
+                placeholder = {
+                    Text(
+                        text = placeHolder,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = ColorTextSecondary
                     )
+                },
+                textStyle = MaterialTheme.typography.bodyMedium,
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = ColorBackgroundTextField,
+                    cursorColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedTextColor = ColorTextPrimary,
+                    unfocusedTextColor = ColorTextPrimary
+                ),
+                shape = RoundedCornerShape(8.dp),
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (passwordVisible) {
+                        painterResource(id = R.drawable.ic_visibility_on)
+                    } else {
+                        painterResource(id = R.drawable.ic_visibility_off)
+                    }
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            painter = image,
+                            "switch password visibility",
+                            Modifier.size(24.dp),
+                            tint = ColorTextSecondary
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -113,7 +109,7 @@ fun TextFieldPasswordPreview() {
             .padding(vertical = 20.dp, horizontal = 12.dp),
         label = "Enter Password",
         placeHolder = "e.g. placeholder",
-        isEnabled = false,
+        isEnabled = true,
         password = "",
         onPasswordChange = { }
     )

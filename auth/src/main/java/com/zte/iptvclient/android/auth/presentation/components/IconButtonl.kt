@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -21,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zte.iptvclient.android.auth.R
+import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +49,7 @@ fun IconButton(
         Text(
             text = text,
             modifier = Modifier.padding(top = 8.dp),
-            color = Color(0xFF919999),
+            color = ColorTextSecondary,
             fontSize = 10.sp,
             fontWeight = FontWeight.W600
         )
