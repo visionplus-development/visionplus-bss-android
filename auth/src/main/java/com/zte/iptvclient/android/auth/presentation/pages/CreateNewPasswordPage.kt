@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
 import com.zte.iptvclient.android.auth.presentation.components.TextFieldPassword
 import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundForm
 
 @Composable
 fun CreateNewPasswordPage() {
@@ -40,7 +41,7 @@ fun CreateNewPasswordPage() {
                         .fillMaxWidth()
                         .padding(16.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF141414)),
+                        .background(ColorBackgroundForm),
                 ) {
                     TextFieldPassword(
                         modifier = Modifier

@@ -1,14 +1,18 @@
 package com.zte.iptvclient.android.auth.presentation.pages
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,202 +20,239 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
 import com.zte.iptvclient.android.auth.presentation.components.TabForm
 import com.zte.iptvclient.android.auth.presentation.components.TextFieldEmail
 import com.zte.iptvclient.android.auth.presentation.components.TextFieldOTP
 import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundForm
+import com.zte.iptvclient.android.auth.presentation.theme.ColorPrimary
+import com.zte.iptvclient.android.auth.presentation.theme.ColorTextButtonDisable
+import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
+import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
+import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
 
 @Composable
 fun ForgotPasswordPage() {
     var email by remember { mutableStateOf("") }
-    var otpNum1 by remember { mutableStateOf("") }
-    var otpNum2 by remember { mutableStateOf("") }
-    var otpNum3 by remember { mutableStateOf("") }
-    var otpNum4 by remember { mutableStateOf("") }
+    var otpValue by remember {
+        mutableStateOf("")
+    }
     val focusManager = LocalFocusManager.current
 
-    Scaffold(
-        topBar = {
-            ToolbarMain(
-                modifier = Modifier.fillMaxWidth(),
-                title = "Create New Password"
-            ) {
-            }
-        },
-        content = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .background(Color.Black)
-            ) {
-                Column(
+    VisionplusbssandroidTheme {
+        Scaffold(
+            topBar = {
+                ToolbarMain(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = "Create New Password"
+                ) {
+                }
+            },
+            content = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                        .background(Color.Black)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        TabForm(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(ColorBackgroundForm),
+                            onTabClick = {
+                                email = ""
+                                otpValue = ""
+                            },
+                            tabPhone = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 16.dp
+                                        ),
+                                    horizontalAlignment = Alignment.End,
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Get OTP or Link Click",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = if (true) ColorTextPrimary else ColorTextSecondary,
+                                            textAlign = TextAlign.Start
+                                        )
+                                        val countdownString = buildAnnotatedString {
+                                            append("Send after")
+                                            withStyle(style = SpanStyle(ColorPrimary)) {
+                                                append(" ")
+                                            }
+                                        }
+                                        if ("".isNotEmpty()) {
+                                            Text(
+                                                text = countdownString,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = if (true) ColorTextPrimary else ColorTextSecondary,
+                                                textAlign = TextAlign.Start
+                                            )
+                                        } else {
+                                            ClickableText(
+                                                text = AnnotatedString("Send OTP"),
+                                                style = TextStyle(
+                                                    color = if (true) ColorPrimary else ColorTextButtonDisable,
+                                                    fontSize = 12.sp,
+                                                    fontWeight = FontWeight.W600
+                                                ),
+                                                onClick = {
+                                                }
+                                            )
+                                        }
+                                    }
+                                    TextFieldOTP(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        otpText = otpValue,
+                                        onOtpTextChange = { value, otpInputFilled ->
+                                            if (value.isDigitsOnly()) {
+                                                otpValue = value
+                                            }
+                                        }
+                                    )
+                                }
+                            },
+                            tabEmail = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 16.dp
+                                        )
+                                ) {
+                                    TextFieldEmail(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 32.dp),
+                                        label = "Email",
+                                        value = email,
+                                        onValueChange = { value ->
+                                            email = value
+                                        },
+                                        keyboardOptions = remember {
+                                            KeyboardOptions(
+                                                keyboardType = KeyboardType.Email,
+                                                imeAction = ImeAction.Next
+                                            )
+                                        },
+                                        keyboardActions = KeyboardActions(
+                                            onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                                        )
+                                    )
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Get OTP or Link Click",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = if (true) ColorTextPrimary else ColorTextSecondary,
+                                            textAlign = TextAlign.Start
+                                        )
+                                        val countdownString = buildAnnotatedString {
+                                            append("Send after")
+                                            withStyle(style = SpanStyle(ColorPrimary)) {
+                                                append(" ")
+                                            }
+                                        }
+                                        if ("".isNotEmpty()) {
+                                            Text(
+                                                text = countdownString,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = if (true) ColorTextPrimary else ColorTextSecondary,
+                                                textAlign = TextAlign.Start
+                                            )
+                                        } else {
+                                            ClickableText(
+                                                text = AnnotatedString("Send OTP"),
+                                                style = TextStyle(
+                                                    color = if (true) ColorPrimary else ColorTextButtonDisable,
+                                                    fontSize = 12.sp,
+                                                    fontWeight = FontWeight.W600
+                                                ),
+                                                onClick = {
+                                                }
+                                            )
+                                        }
+                                    }
+                                    TextFieldOTP(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        otpText = otpValue,
+                                        onOtpTextChange = { value, _ ->
+                                            if (value.isDigitsOnly()) {
+                                                otpValue = value
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 42.dp),
+                            text = "We will send the verification code to your email address.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = ColorTextSecondary,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            },
+            bottomBar = {
+                ButtonMain(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(Color.Black)
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    text = "Next",
+                    isEnabled = false
                 ) {
-                    TabForm(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFF141414)),
-                        onTabClick = {
-                            email = ""
-                            otpNum1 = ""
-                            otpNum2 = ""
-                            otpNum3 = ""
-                            otpNum4 = ""
-                        },
-                        tabPhone = {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                        horizontal = 16.dp,
-                                        vertical = 16.dp
-                                    )
-                            ) {
-                                TextFieldOTP(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 16.dp),
-                                    onSendOTP = {
-                                    },
-                                    label = "Get OTP or Link Click",
-                                    countdown = "",
-                                    isEnabled = true,
-                                    value1 = otpNum1,
-                                    value2 = otpNum2,
-                                    value3 = otpNum3,
-                                    value4 = otpNum4,
-                                    onValueChange1 = {
-                                        otpNum1 = it
-                                    },
-                                    onValueChange2 = {
-                                        otpNum2 = it
-                                    },
-                                    onValueChange3 = {
-                                        otpNum3 = it
-                                    },
-                                    onValueChange4 = {
-                                        otpNum4 = it
-                                    },
-                                    keyboardOptions = remember {
-                                        KeyboardOptions(
-                                            keyboardType = KeyboardType.Number,
-                                            imeAction = ImeAction.Next
-                                        )
-                                    },
-                                    keyboardActions = KeyboardActions(
-                                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
-                                    )
-                                )
-                            }
-                        },
-                        tabEmail = {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                        horizontal = 16.dp,
-                                        vertical = 16.dp
-                                    )
-                            ) {
-                                TextFieldEmail(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 32.dp),
-                                    label = "Email",
-                                    value = email,
-                                    onValueChange = { value ->
-                                        email = value
-                                    },
-                                    keyboardOptions = remember {
-                                        KeyboardOptions(
-                                            keyboardType = KeyboardType.Email,
-                                            imeAction = ImeAction.Next
-                                        )
-                                    },
-                                    keyboardActions = KeyboardActions(
-                                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
-                                    )
-                                )
-                                TextFieldOTP(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 16.dp),
-                                    onSendOTP = {
-                                    },
-                                    label = "Get OTP or Link Click",
-                                    countdown = "",
-                                    isEnabled = true,
-                                    value1 = otpNum1,
-                                    value2 = otpNum2,
-                                    value3 = otpNum3,
-                                    value4 = otpNum4,
-                                    onValueChange1 = {
-                                        otpNum1 = it
-                                    },
-                                    onValueChange2 = {
-                                        otpNum2 = it
-                                    },
-                                    onValueChange3 = {
-                                        otpNum3 = it
-                                    },
-                                    onValueChange4 = {
-                                        otpNum4 = it
-                                    },
-                                    keyboardOptions = remember {
-                                        KeyboardOptions(
-                                            keyboardType = KeyboardType.Number,
-                                            imeAction = ImeAction.Next
-                                        )
-                                    },
-                                    keyboardActions = KeyboardActions(
-                                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
-                                    )
-                                )
-                            }
-                        }
-                    )
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 42.dp),
-                        text = "We will send the verification code to your email address.",
-                        color = Color(0xFF919999),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.W400,
-                        textAlign = TextAlign.Center
-                    )
                 }
             }
-        },
-        bottomBar = {
-            ButtonMain(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Black)
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                text = "Next",
-                isEnabled = false
-            ) {
-            }
-        }
-    )
+        )
+    }
 }
 
 @Preview(showBackground = true)
