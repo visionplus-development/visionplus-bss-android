@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,6 +25,8 @@ import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundForm
 
 @Composable
 fun CreateNewPasswordPage() {
+    var password by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             ToolbarMain(
@@ -29,11 +35,11 @@ fun CreateNewPasswordPage() {
             ) {
             }
         },
-        content = {
+        content = { innerPadding ->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
+                    .padding(innerPadding)
                     .background(Color.Black)
             ) {
                 Column(
@@ -50,8 +56,10 @@ fun CreateNewPasswordPage() {
                         label = "Enter Email",
                         placeHolder = "e.g. placeholder",
                         isEnabled = true,
-                        password = "",
-                        onPasswordChange = {}
+                        password = password,
+                        onPasswordChange = {
+                            password = it
+                        }
                     )
                 }
             }
@@ -63,7 +71,7 @@ fun CreateNewPasswordPage() {
                     .background(Color.Black)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 text = "Next",
-                isEnabled = false
+                isEnabled = password.isNotEmpty()
             ) {
             }
         }
