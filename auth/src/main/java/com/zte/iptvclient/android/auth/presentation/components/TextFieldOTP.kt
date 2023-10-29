@@ -30,6 +30,7 @@ fun TextFieldOTP(
     modifier: Modifier = Modifier,
     otpText: String,
     otpCount: Int = 4,
+    isEnabled: Boolean = true,
     onOtpTextChange: (String, Boolean) -> Unit
 ) {
     BasicTextField(
@@ -40,6 +41,7 @@ fun TextFieldOTP(
                 onOtpTextChange.invoke(it.text, it.text.length == otpCount)
             }
         },
+        enabled = isEnabled,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
         decorationBox = {
             Row(

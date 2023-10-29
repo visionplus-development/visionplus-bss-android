@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,6 +55,8 @@ import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTh
 @Composable
 fun ForgotPasswordPage() {
     var email by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+    var isOtpClicked by rememberSaveable { mutableStateOf(false) }
     var otpValue by remember {
         mutableStateOf("")
     }
@@ -64,7 +67,7 @@ fun ForgotPasswordPage() {
             topBar = {
                 ToolbarMain(
                     modifier = Modifier.fillMaxWidth(),
-                    title = "Create New Password"
+                    title = "Forgot Password"
                 ) {
                 }
             },
@@ -87,7 +90,9 @@ fun ForgotPasswordPage() {
                                 .background(ColorBackgroundForm),
                             onTabClick = {
                                 email = ""
+                                phone = ""
                                 otpValue = ""
+                                isOtpClicked = false
                             },
                             tabPhone = {
                                 Column(
@@ -109,7 +114,7 @@ fun ForgotPasswordPage() {
                                         Text(
                                             text = "Get OTP or Link Click",
                                             style = MaterialTheme.typography.bodyMedium,
-                                            color = if (true) ColorTextPrimary else ColorTextSecondary,
+                                            color = if (phone.isNotEmpty()) ColorTextPrimary else ColorTextSecondary,
                                             textAlign = TextAlign.Start
                                         )
                                         val countdownString = buildAnnotatedString {
@@ -118,22 +123,24 @@ fun ForgotPasswordPage() {
                                                 append(" ")
                                             }
                                         }
-                                        if ("".isNotEmpty()) {
+//                                         todo: check phone requirement. no phone requirement yet
+                                        if (isOtpClicked) {
                                             Text(
                                                 text = countdownString,
                                                 style = MaterialTheme.typography.bodySmall,
-                                                color = if (true) ColorTextPrimary else ColorTextSecondary,
+                                                color = ColorTextPrimary,
                                                 textAlign = TextAlign.Start
                                             )
                                         } else {
                                             ClickableText(
                                                 text = AnnotatedString("Send OTP"),
                                                 style = TextStyle(
-                                                    color = if (true) ColorPrimary else ColorTextButtonDisable,
+                                                    color = if (phone.isNotEmpty()) ColorPrimary else ColorTextButtonDisable,
                                                     fontSize = 12.sp,
                                                     fontWeight = FontWeight.W600
                                                 ),
                                                 onClick = {
+                                                    if (phone.isNotEmpty()) isOtpClicked = true
                                                 }
                                             )
                                         }
@@ -141,8 +148,10 @@ fun ForgotPasswordPage() {
                                     TextFieldOTP(
                                         modifier = Modifier.fillMaxWidth(),
                                         otpText = otpValue,
-                                        onOtpTextChange = { value, otpInputFilled ->
-                                            if (value.isDigitsOnly()) {
+                                        // todo: requirement TBD, need BE integration
+                                        isEnabled = phone.isNotEmpty(),
+                                        onOtpTextChange = { value, _ ->
+                                            if (value.isDigitsOnly() && phone.isNotEmpty()) {
                                                 otpValue = value
                                             }
                                         }
@@ -187,7 +196,7 @@ fun ForgotPasswordPage() {
                                         Text(
                                             text = "Get OTP or Link Click",
                                             style = MaterialTheme.typography.bodyMedium,
-                                            color = if (true) ColorTextPrimary else ColorTextSecondary,
+                                            color = if (email.isNotEmpty()) ColorTextPrimary else ColorTextSecondary,
                                             textAlign = TextAlign.Start
                                         )
                                         val countdownString = buildAnnotatedString {
@@ -196,22 +205,24 @@ fun ForgotPasswordPage() {
                                                 append(" ")
                                             }
                                         }
-                                        if ("".isNotEmpty()) {
+                                        // todo: check email requirement. no email requirement yet
+                                        if (isOtpClicked) {
                                             Text(
                                                 text = countdownString,
                                                 style = MaterialTheme.typography.bodySmall,
-                                                color = if (true) ColorTextPrimary else ColorTextSecondary,
+                                                color = ColorTextPrimary,
                                                 textAlign = TextAlign.Start
                                             )
                                         } else {
                                             ClickableText(
                                                 text = AnnotatedString("Send OTP"),
                                                 style = TextStyle(
-                                                    color = if (true) ColorPrimary else ColorTextButtonDisable,
+                                                    color = if (email.isNotEmpty()) ColorPrimary else ColorTextButtonDisable,
                                                     fontSize = 12.sp,
                                                     fontWeight = FontWeight.W600
                                                 ),
                                                 onClick = {
+                                                    if (email.isNotEmpty()) isOtpClicked = true
                                                 }
                                             )
                                         }
@@ -219,8 +230,10 @@ fun ForgotPasswordPage() {
                                     TextFieldOTP(
                                         modifier = Modifier.fillMaxWidth(),
                                         otpText = otpValue,
+                                        // todo: requirement TBD, need BE integration
+                                        isEnabled = email.isNotEmpty(),
                                         onOtpTextChange = { value, _ ->
-                                            if (value.isDigitsOnly()) {
+                                            if (value.isDigitsOnly() && email.isNotEmpty()) {
                                                 otpValue = value
                                             }
                                         }
@@ -247,7 +260,7 @@ fun ForgotPasswordPage() {
                         .background(Color.Black)
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     text = "Next",
-                    isEnabled = false
+                    isEnabled = otpValue.length == 4
                 ) {
                 }
             }
