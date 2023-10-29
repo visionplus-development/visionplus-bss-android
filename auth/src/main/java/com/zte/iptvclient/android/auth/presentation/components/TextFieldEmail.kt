@@ -4,14 +4,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +30,11 @@ import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTh
 @Composable
 fun TextFieldEmail(
     modifier: Modifier,
-    label: String
+    label: String,
+    value: String,
+    onValueChange: (value: String) -> Unit,
+    keyboardOptions: KeyboardOptions = remember { KeyboardOptions.Default },
+    keyboardActions: KeyboardActions = KeyboardActions()
 ) {
     VisionplusbssandroidTheme {
         Column(
@@ -42,8 +52,10 @@ fun TextFieldEmail(
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = "",
-                onValueChange = {},
+                value = value,
+                onValueChange = {
+                    onValueChange(it)
+                },
                 placeholder = {
                     Text(
                         text = "Email (mail@gmail.com)",
@@ -60,7 +72,9 @@ fun TextFieldEmail(
                     focusedTextColor = ColorTextPrimary,
                     unfocusedTextColor = ColorTextPrimary
                 ),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions
             )
         }
     }
@@ -74,5 +88,14 @@ fun TextFieldEmailPreview() {
             .fillMaxWidth()
             .padding(bottom = 8.dp),
         label = "Email",
+        value = "",
+        onValueChange = {},
+        keyboardOptions = remember {
+            KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            )
+        },
+        keyboardActions = KeyboardActions()
     )
 }
