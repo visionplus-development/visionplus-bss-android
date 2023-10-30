@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
 import com.zte.iptvclient.android.auth.presentation.components.TabForm
 import com.zte.iptvclient.android.auth.presentation.components.TextFieldEmail
@@ -172,7 +173,7 @@ fun ForgotPasswordPage() {
                                             .fillMaxWidth()
                                             .padding(bottom = 32.dp),
                                         label = "Email",
-                                        value = email,
+                                        inputWrapper = InputWrapper(email, null),
                                         onValueChange = { value ->
                                             email = value
                                         },
