@@ -23,12 +23,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundForm
+import com.zte.iptvclient.android.auth.presentation.theme.ColorPrimary
+import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TabForm(
     modifier: Modifier,
+    onTabClick: () -> Unit,
     tabPhone: @Composable () -> Unit,
     tabEmail: @Composable () -> Unit
 ) {
@@ -53,11 +57,11 @@ fun TabForm(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TabRow(
-            containerColor = Color(0xFF141414),
+            containerColor = ColorBackgroundForm,
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
-                    color = Color(0xFF07E3D0),
+                    color = ColorPrimary,
                     height = 2.dp,
                     modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
                 )
@@ -70,11 +74,12 @@ fun TabForm(
                     text = {
                         Text(
                             title.title,
-                            color = if (isActive.intValue == index) Color(0xFF07E3D0) else Color(0xFF919999)
+                            color = if (isActive.intValue == index) ColorPrimary else ColorTextSecondary
                         )
                     },
                     selected = pagerState.currentPage == index,
                     onClick = {
+                        onTabClick()
                         isActive.intValue = index
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     }
@@ -105,8 +110,9 @@ fun TabFormPreview() {
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF141414)),
-        tabPhone = { FormEmail() },
-        tabEmail = { FormEmail() }
+            .background(ColorBackgroundForm),
+        onTabClick = { },
+        tabPhone = {  },
+        tabEmail = {  }
     )
 }
