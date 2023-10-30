@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.data.model.InputWrapper
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundTextField
 import com.zte.iptvclient.android.auth.presentation.theme.ColorError
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
@@ -87,16 +88,17 @@ fun TextFieldPhoneNumber(
                     .then(borderModifier),
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFF202020),
+                    containerColor = ColorBackgroundTextField,
                     cursorColor = Color.Black,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
+                    focusedTextColor = ColorTextPrimary,
+                    unfocusedTextColor = ColorTextPrimary
                 ),
+                maxLines = 1,
                 value = inputWrapper.value,
                 textStyle = TextStyle(
-                    color = Color(0xFFFFFFFF),
+                    color = ColorTextPrimary,
                     fontSize = 12.sp
                 ),
                 singleLine = true,
@@ -117,7 +119,7 @@ fun TextFieldPhoneNumber(
                         )
                         Text(
                             text = "+62",
-                            color = Color(0xFF919999),
+                            color = ColorTextSecondary,
                             fontSize = 12.sp
                         )
                         Icon(
@@ -129,9 +131,11 @@ fun TextFieldPhoneNumber(
                 },
                 placeholder = {
                     Text(
-                        text = "Phone number (ex: 085812345678)",
-                        color = Color(0xFF919999),
-                        fontSize = 12.sp
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Phone Number",
+                        color = ColorTextSecondary,
+                        fontSize = 12.sp,
+                        maxLines = 1,
                     )
                 },
                 onValueChange = {
