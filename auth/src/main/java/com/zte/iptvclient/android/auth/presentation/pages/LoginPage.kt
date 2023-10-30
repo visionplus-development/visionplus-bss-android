@@ -123,6 +123,7 @@ internal fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 20.dp, horizontal = 12.dp),
+                    onTabClick = {},
                     tabPhone = {
                         PhoneLogin()
                     },

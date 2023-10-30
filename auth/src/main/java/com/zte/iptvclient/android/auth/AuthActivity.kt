@@ -23,9 +23,7 @@ import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.zte.iptvclient.android.auth.presentation.pages.EmailVerificationPage
 import com.zte.iptvclient.android.auth.presentation.components.Screens
-import com.zte.iptvclient.android.auth.presentation.pages.ForgotPasswordPage
 import com.zte.iptvclient.android.auth.presentation.pages.LoginScreen
 import com.zte.iptvclient.android.auth.presentation.pages.RegisterScreen
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackround
