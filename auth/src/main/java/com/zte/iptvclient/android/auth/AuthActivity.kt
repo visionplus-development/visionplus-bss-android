@@ -7,10 +7,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.facebook.CallbackManager
 import com.facebook.FacebookSdk
 import com.facebook.LoggingBehavior
@@ -18,14 +23,13 @@ import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.zte.iptvclient.android.auth.presentation.components.Screens
 import com.zte.iptvclient.android.auth.presentation.pages.EmailVerificationScreen
 import com.zte.iptvclient.android.auth.presentation.pages.ForgotPasswordPage
 import com.zte.iptvclient.android.auth.presentation.pages.LoginScreen
-import com.zte.iptvclient.android.auth.presentation.pages.OtpScreen
 import com.zte.iptvclient.android.auth.presentation.pages.RegisterScreen
-import com.zte.iptvclient.android.auth.presentation.pages.ResetPasswordScreen
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackround
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
-import com.zte.iptvclient.android.auth.utils.PageType
 import com.zte.iptvclient.android.auth.utils.Result
 
 internal class AuthActivity : ComponentActivity() {
@@ -65,17 +69,80 @@ internal class AuthActivity : ComponentActivity() {
         setContent {
             VisionplusbssandroidTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    when (pageType) {
-                        PageType.LOGIN.name -> {
+                Surface(modifier = Modifier.fillMaxSize(), color = ColorBackround) {
+                    val navController = rememberNavController()
+                    val context = LocalContext.current
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screens.Register.route,
+                    ) {
+                        composable(
+                            route = Screens.Register.route,
+                            enterTransition = {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                    animationSpec = tween(100)
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                    animationSpec = tween(100)
+                                )
+                            },
+                            popEnterTransition = {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                    animationSpec = tween(100)
+                                )
+                            },
+                            popExitTransition = {
+                                slideOutOfContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                    animationSpec = tween(100)
+                                )
+                            }) {
+                            RegisterScreen(
+                                clickBack = {
+                                    finish()
+                                },
+                                navController = navController
+                            )
+                        }
+                        composable(
+                            route = Screens.Login.route,
+                            enterTransition = {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                    animationSpec = tween(100)
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                    animationSpec = tween(100)
+                                )
+                            },
+                            popEnterTransition = {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                    animationSpec = tween(100)
+                                )
+                            },
+                            popExitTransition = {
+                                slideOutOfContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                    animationSpec = tween(100)
+                                )
+                            }) {
                             LoginScreen(
                                 clickGoogle = {
                                     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                         .requestIdToken(BuildConfig.GOOGLE_SIGN_TOKEN)
                                         .requestEmail()
                                         .build()
-                                    val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(this, gso)
-                                    val account = GoogleSignIn.getLastSignedInAccount(this)
+                                    val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(context, gso)
+                                    val account = GoogleSignIn.getLastSignedInAccount(context)
                                     if (account == null) {
                                         val signInIntent = googleSignInClient.signInIntent
                                         signInLauncher.launch(signInIntent)
@@ -98,28 +165,9 @@ internal class AuthActivity : ComponentActivity() {
                                 },
                                 clickBack = {
                                     finish()
-                                }
+                                },
+                                navController = navController
                             )
-                        }
-
-                        PageType.REGISTER.name -> {
-                            RegisterScreen()
-                        }
-
-                        PageType.FORGOT_PASSWORD.name -> {
-                            ForgotPasswordPage()
-                        }
-
-                        PageType.RESET_PASSWORD.name -> {
-                            ResetPasswordScreen()
-                        }
-
-                        PageType.OTP.name -> {
-                            OtpScreen()
-                        }
-
-                        PageType.EMAIL_VERIFICATION.name -> {
-                            EmailVerificationScreen()
                         }
                     }
                 }

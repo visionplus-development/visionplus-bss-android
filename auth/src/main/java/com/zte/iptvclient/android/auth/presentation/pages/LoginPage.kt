@@ -1,7 +1,7 @@
 package com.zte.iptvclient.android.auth.presentation.pages
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -29,39 +27,40 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.zte.iptvclient.android.auth.R
-import kotlinx.coroutines.launch
+import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
+import com.zte.iptvclient.android.auth.presentation.components.Screens
+import com.zte.iptvclient.android.auth.presentation.components.TabForm
+import com.zte.iptvclient.android.auth.presentation.components.TextDivider
+import com.zte.iptvclient.android.auth.presentation.components.TextSwitchAuth
+import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundForm
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackround
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -70,27 +69,72 @@ internal fun LoginScreen(
     callbackManager: CallbackManager,
     onLoginResult: (loginResult: LoginResult?) -> Unit,
     clickBack: () -> Unit,
+    navController: NavController
 ) {
+
+    BackHandler {
+        clickBack()
+    }
     Scaffold(
+        containerColor = ColorBackround,
         topBar = {
-            CustomToolbar(
-                title = "Login",
-                onBackClick = clickBack
+            ToolbarMain(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(id = R.string.label_login),
+                onBackClick = {
+                    clickBack()
+                }
             )
         },
         bottomBar = {
-            ButtonLogin()
+            ButtonMain(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
+                    )
+                    .background(ColorBackround),
+                text = stringResource(
+                    id = R.string.label_login
+                ),
+                isEnabled = false
+            ) {
+
+            }
         },
         content = {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 60.dp)
-                    .background(Color.Black),
+                    .padding(it),
             ) {
-                TextSwitchRegister()
-                TabLayout()
-                TextSocialLogin()
+                TextSwitchAuth(
+                    modifier = Modifier.padding(all = 16.dp),
+                    questionText = stringResource(id = R.string.label_created_account),
+                    actionText = stringResource(id = R.string.label_register),
+                    onTextClick = {
+                        navController.navigate(Screens.Register.route)
+                    }
+                )
+                TabForm(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 20.dp, horizontal = 12.dp),
+                    tabPhone = {
+                        PhoneLogin()
+                    },
+                    tabEmail = {
+                        EmailLogin()
+                    })
+                TextDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    text = stringResource(id = R.string.label_agreement_login)
+                )
                 GridSocialLoginScreen(clickGoogle, callbackManager, onLoginResult)
                 TextTNC()
             }
@@ -181,30 +225,30 @@ internal fun TextTNC() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "By logging in, I agree with",
+            text = stringResource(id = R.string.label_agreement_login),
             color = Color(0xFF7D7D7D),
             fontSize = 13.sp
         )
         Row {
             ClickableText(
-                text = AnnotatedString("Terms & Conditions "),
+                text = AnnotatedString(stringResource(id = R.string.label_terms_condition)),
                 style = TextStyle(color = Color(0xFF07E3D0), fontSize = 13.sp),
                 onClick = {
                 }
             )
             Text(
-                text = "and ",
+                text = stringResource(id = R.string.label_and) + " ",
                 color = Color(0xFF7D7D7D),
                 fontSize = 13.sp
             )
             ClickableText(
-                text = AnnotatedString("Privacy Policy "),
+                text = AnnotatedString(stringResource(id = R.string.label_privacy_policy) + " "),
                 style = TextStyle(color = Color(0xFF07E3D0), fontSize = 13.sp),
                 onClick = {
                 }
             )
             Text(
-                text = "from Vision+ ",
+                text = stringResource(id = R.string.label_from_visonplus) + " ",
                 fontSize = 13.sp,
                 color = Color(0xFF7D7D7D),
             )
@@ -245,82 +289,14 @@ internal fun CustomToolbar(
                 }
             },
             actions = {
-                // Add other actions if needed
             },
         )
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-internal fun TabLayout() {
-    val isActive = remember { mutableIntStateOf(0) }
-
-    val coroutineScope = rememberCoroutineScope()
-    val pagerState = rememberPagerState()
-
-    val tabRowItems = listOf(
-        ImageTabItem(
-            text = "Phone Number",
-            screen = { PhoneLogin() }
-        ),
-        ImageTabItem(
-            text = "Email",
-            screen = { EmailLogin() }
-        ),
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF141414)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TabRow(
-            containerColor = Color(0xFF141414),
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    color = Color(0xFF07E3D0),
-                    height = 2.dp,
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                )
-            }
-        ) {
-            tabRowItems.forEachIndexed { index, title ->
-                Tab(
-                    selectedContentColor = Color.Cyan,
-                    unselectedContentColor = Color.Cyan,
-                    text = {
-                        Text(
-                            title.text,
-                            color = if (isActive.intValue == index) Color(0xFF07E3D0) else Color(0xFF919999)
-                        )
-                    },
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        isActive.intValue = index
-                        coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                    }
-                )
-            }
-        }
-
-        HorizontalPager(
-            pageCount = tabRowItems.size,
-            state = pagerState,
-            userScrollEnabled = false
-        ) {
-            tabRowItems[pagerState.currentPage].screen()
-        }
-    }
-}
-
 internal data class ImageTabItem(
-    val text: String,//Tab Title
-    val screen: @Composable () -> Unit//Tab Screen(can also take params)
+    val text: String,
+    val screen: @Composable () -> Unit
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -329,10 +305,13 @@ internal fun PhoneLogin() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(color = ColorBackgroundForm)
             .padding(vertical = 20.dp, horizontal = 12.dp),
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = "Enter Phone Number",
             textAlign = TextAlign.Start,
             color = Color(0xFFF5F5F5),
@@ -340,7 +319,9 @@ internal fun PhoneLogin() {
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp),
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFF202020),
@@ -359,7 +340,9 @@ internal fun PhoneLogin() {
         )
 
         Text(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = "Enter Password",
             textAlign = TextAlign.Start,
             color = Color(0xFFF5F5F5),
@@ -367,7 +350,9 @@ internal fun PhoneLogin() {
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp),
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFF202020),
@@ -387,7 +372,7 @@ internal fun PhoneLogin() {
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Forgot Password?",
+            text = stringResource(id = R.string.label_forgot_password),
             textAlign = TextAlign.End,
             color = Color(0xFF919999),
             fontSize = 14.sp
@@ -401,10 +386,13 @@ internal fun EmailLogin() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(color = ColorBackgroundForm)
             .padding(vertical = 20.dp, horizontal = 12.dp),
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = "Enter Email",
             textAlign = TextAlign.Start,
             color = Color(0xFFF5F5F5),
@@ -412,7 +400,9 @@ internal fun EmailLogin() {
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFF202020),
                 cursorColor = Color.Black,
@@ -430,7 +420,9 @@ internal fun EmailLogin() {
         )
 
         Text(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = "Enter Password",
             textAlign = TextAlign.Start,
             color = Color(0xFFF5F5F5),
@@ -438,7 +430,9 @@ internal fun EmailLogin() {
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 42.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 42.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFF202020),
                 cursorColor = Color.Black,
@@ -482,19 +476,22 @@ internal fun GridSocialLoginScreen(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            GridItem(
-                text = "Google",
-                painter = painterResource(id = R.drawable.ic_gmail),
+            com.zte.iptvclient.android.auth.presentation.components.IconButton(
+                painter = painterResource(
+                    id = R.drawable.ic_gmail
+                ),
+                text = stringResource(id = R.string.label_google),
                 modifier = Modifier.weight(1f),
-                onClick = {
+                onButtonClick = {
                     clickGoogle()
-                }
-            )
-            GridItem(
-                text = "Facebook",
-                painter = painterResource(id = R.drawable.ic_facebook),
+                })
+            com.zte.iptvclient.android.auth.presentation.components.IconButton(
+                painter = painterResource(
+                    id = R.drawable.ic_facebook
+                ),
+                text = stringResource(id = R.string.label_facebook),
                 modifier = Modifier.weight(1f),
-                onClick = {
+                onButtonClick = {
                     val loginButton = LoginButton(context)
                     loginButton.setPermissions(listOf("email", "public_profile"))
                     loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
@@ -511,8 +508,7 @@ internal fun GridSocialLoginScreen(
                     })
 
                     loginButton.performClick()
-                }
-            )
+                })
         }
     }
 }
