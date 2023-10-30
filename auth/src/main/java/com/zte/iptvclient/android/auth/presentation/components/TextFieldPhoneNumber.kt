@@ -1,11 +1,11 @@
 package com.zte.iptvclient.android.auth.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,10 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -39,6 +37,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zte.iptvclient.android.auth.R
+import com.zte.iptvclient.android.auth.data.model.InputWrapper
+import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundTextField
+import com.zte.iptvclient.android.auth.presentation.theme.ColorError
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
@@ -48,19 +49,19 @@ import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTh
 fun TextFieldPhoneNumber(
     modifier: Modifier,
     label: String,
-    placeHolder: String,
+    inputWrapper: InputWrapper,
     isEnabled: Boolean,
-    phoneNumber: String,
     onPhoneNumberChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
 ) {
 
     val focusManager = LocalFocusManager.current
+    val fieldValue = remember { mutableStateOf(inputWrapper.value) }
+    val fieldError = remember { mutableStateOf(inputWrapper.errorMessage) }
     val countries = listOf(
-        Country("Indonesia", "62",R.drawable.ic_flag_indonesia),
+        Country("Indonesia", "62", R.drawable.ic_flag_indonesia),
         Country("Malaysia", "60", R.drawable.ic_flag_malaysia)
     )
-    var showBottomSheet by remember { mutableStateOf(false) }
+    val showBottomSheet = remember { mutableStateOf(false) }
 
     VisionplusbssandroidTheme {
         Column(
@@ -76,21 +77,28 @@ fun TextFieldPhoneNumber(
                 textAlign = TextAlign.Start
             )
 
+            val borderModifier = if (fieldValue.value == "error") {
+                Modifier.border(1.dp, ColorError, RoundedCornerShape(8.dp))
+            } else {
+                Modifier
+            }
             TextField(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .then(borderModifier),
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFF202020),
+                    containerColor = ColorBackgroundTextField,
                     cursorColor = Color.Black,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
+                    focusedTextColor = ColorTextPrimary,
+                    unfocusedTextColor = ColorTextPrimary
                 ),
-                value = phoneNumber,
+                maxLines = 1,
+                value = inputWrapper.value,
                 textStyle = TextStyle(
-                    color = Color(0xFFFFFFFF),
+                    color = ColorTextPrimary,
                     fontSize = 12.sp
                 ),
                 singleLine = true,
@@ -98,19 +106,20 @@ fun TextFieldPhoneNumber(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clickable {
-                            showBottomSheet = true
+                            showBottomSheet.value = true
                         }
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_flag_indonesia),
                             contentDescription = "",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier
+                                .padding(10.dp)
                                 .size(25.dp)
                         )
                         Text(
                             text = "+62",
-                            color = Color(0xFF919999),
+                            color = ColorTextSecondary,
                             fontSize = 12.sp
                         )
                         Icon(
@@ -122,15 +131,15 @@ fun TextFieldPhoneNumber(
                 },
                 placeholder = {
                     Text(
-                        text = "Phone number (ex: 085812345678)",
-                        color = Color(0xFF919999),
-                        fontSize = 12.sp
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Phone Number",
+                        color = ColorTextSecondary,
+                        fontSize = 12.sp,
+                        maxLines = 1,
                     )
                 },
                 onValueChange = {
-                    if (it.isNullOrEmpty()) {
-                        onPasswordChange("")
-                    }
+                    fieldValue.value = it
                     onPhoneNumberChange(it)
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
@@ -138,10 +147,23 @@ fun TextFieldPhoneNumber(
                     onNext = { focusManager.moveFocus(FocusDirection.Next) }
                 )
             )
-            if (showBottomSheet) {
+            // todo: check error from BE response
+            if (fieldValue.value == "error") {
+                fieldError.value = "error message"
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp),
+                    text = fieldError.value.orEmpty(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = ColorError,
+                    textAlign = TextAlign.Start,
+                )
+            }
+            if (showBottomSheet.value) {
                 BottomSheetCountry(
                     countries = countries,
-                    onShowBottomSheet = { showBottomSheet = false },
+                    onShowBottomSheet = { showBottomSheet.value = false },
                     onCountrySelected = {}
                 )
             }
@@ -157,10 +179,8 @@ fun TextFieldPhoneNumberPreview() {
             .fillMaxWidth()
             .padding(vertical = 12.dp, horizontal = 12.dp),
         label = "Enter Phone Number",
-        placeHolder = "e.g. placeholder",
+        inputWrapper = InputWrapper("", null),
         isEnabled = true,
-        phoneNumber = "",
-        onPasswordChange = { },
         onPhoneNumberChange = {}
     )
 }

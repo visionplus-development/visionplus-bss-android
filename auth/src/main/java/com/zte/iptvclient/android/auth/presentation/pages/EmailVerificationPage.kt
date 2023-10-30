@@ -24,10 +24,13 @@ import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackround
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
+import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
 
 @Composable
-internal fun EmailVerificationScreen() {
+internal fun EmailVerificationPage(
+    isSuccess: Boolean = true
+) {
     VisionplusbssandroidTheme {
         Scaffold(
             topBar = {
@@ -46,28 +49,68 @@ internal fun EmailVerificationScreen() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .padding(bottom = 32.dp),
-                        painter = painterResource(id = R.drawable.ic_verify_success),
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop,
-                    )
-                    Text(
-                        text = stringResource(id = R.string.verify_success),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = ColorTextPrimary,
-                        textAlign = TextAlign.Center
-                    )
+                    if (isSuccess) {
+                        VerificationSuccess()
+                    } else {
+                        VerificationFailed()
+                    }
                 }
             }
         )
     }
 }
 
+@Composable
+private fun VerificationSuccess() {
+    Image(
+        modifier = Modifier
+            .width(150.dp)
+            .padding(bottom = 32.dp),
+        painter = painterResource(id = R.drawable.ic_verify_success),
+        contentDescription = "",
+        contentScale = ContentScale.Crop,
+    )
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp),
+        text = stringResource(id = R.string.verify_success),
+        style = MaterialTheme.typography.titleLarge,
+        color = ColorTextPrimary,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+private fun VerificationFailed() {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 32.dp,
+                end = 32.dp,
+                bottom = 16.dp
+            ),
+        text = stringResource(id = R.string.verify_link_expired),
+        style = MaterialTheme.typography.titleLarge,
+        color = ColorTextPrimary,
+        textAlign = TextAlign.Center
+    )
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 52.dp),
+        text = stringResource(id = R.string.retry_link_verification),
+        style = MaterialTheme.typography.bodySmall,
+        color = ColorTextSecondary,
+        textAlign = TextAlign.Center
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun EmailVerificationPreview() {
-    EmailVerificationScreen()
+    EmailVerificationPage(
+        isSuccess = false
+    )
 }
