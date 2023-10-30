@@ -39,7 +39,7 @@ fun TabForm(
     val isActive = remember { mutableIntStateOf(0) }
 
     val coroutineScope = rememberCoroutineScope()
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { 2 }
 
     val tabRowItems = listOf(
         FormTabItem(
@@ -88,12 +88,12 @@ fun TabForm(
         }
 
         HorizontalPager(
-            pageCount = tabRowItems.size,
             state = pagerState,
             userScrollEnabled = false
         ) {
             tabRowItems[pagerState.currentPage].screen()
         }
+
     }
 }
 
