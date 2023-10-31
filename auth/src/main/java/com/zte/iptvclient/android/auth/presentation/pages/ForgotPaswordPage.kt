@@ -1,5 +1,6 @@
 package com.zte.iptvclient.android.auth.presentation.pages
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -40,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.navigation.NavController
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
 import com.zte.iptvclient.android.auth.presentation.components.TabForm
 import com.zte.iptvclient.android.auth.presentation.components.TextFieldEmail
@@ -53,7 +56,9 @@ import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
 
 @Composable
-fun ForgotPasswordPage() {
+fun ForgotPasswordPage(
+    navController: NavController
+) {
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var isOtpClicked by rememberSaveable { mutableStateOf(false) }
@@ -62,14 +67,19 @@ fun ForgotPasswordPage() {
     }
     val focusManager = LocalFocusManager.current
 
+    BackHandler {
+        navController.popBackStack()
+    }
     VisionplusbssandroidTheme {
         Scaffold(
             topBar = {
                 ToolbarMain(
                     modifier = Modifier.fillMaxWidth(),
-                    title = "Forgot Password"
-                ) {
-                }
+                    title = "Forgot Password",
+                    onBackClick = {
+                        navController.popBackStack()
+                    }
+                )
             },
             content = {
                 Box(
@@ -271,5 +281,5 @@ fun ForgotPasswordPage() {
 @Preview(showBackground = true)
 @Composable
 fun ForgotPasswordPreview() {
-    ForgotPasswordPage()
+    ForgotPasswordPage(navController = NavController(LocalContext.current))
 }

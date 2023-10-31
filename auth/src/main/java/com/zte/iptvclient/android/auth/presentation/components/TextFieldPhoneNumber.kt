@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,16 +47,14 @@ import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTh
 fun TextFieldPhoneNumber(
     modifier: Modifier,
     label: String,
-    placeHolder: String,
     isEnabled: Boolean,
     phoneNumber: String,
-    onPhoneNumberChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
+    onPhoneNumberChange: (String) -> Unit
 ) {
 
     val focusManager = LocalFocusManager.current
     val countries = listOf(
-        Country("Indonesia", "62",R.drawable.ic_flag_indonesia),
+        Country("Indonesia", "62", R.drawable.ic_flag_indonesia),
         Country("Malaysia", "60", R.drawable.ic_flag_malaysia)
     )
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -105,8 +102,9 @@ fun TextFieldPhoneNumber(
                             painter = painterResource(id = R.drawable.ic_flag_indonesia),
                             contentDescription = "",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.padding(10.dp)
-                                .size(25.dp)
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .size(width = 25.dp, height = 20.dp)
                         )
                         Text(
                             text = "+62",
@@ -128,9 +126,6 @@ fun TextFieldPhoneNumber(
                     )
                 },
                 onValueChange = {
-                    if (it.isNullOrEmpty()) {
-                        onPasswordChange("")
-                    }
                     onPhoneNumberChange(it)
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
@@ -157,10 +152,8 @@ fun TextFieldPhoneNumberPreview() {
             .fillMaxWidth()
             .padding(vertical = 12.dp, horizontal = 12.dp),
         label = "Enter Phone Number",
-        placeHolder = "e.g. placeholder",
         isEnabled = true,
         phoneNumber = "",
-        onPasswordChange = { },
         onPhoneNumberChange = {}
     )
 }
