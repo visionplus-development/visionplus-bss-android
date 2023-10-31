@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
             VisionplusbssandroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    VPAuth.forgotPassword(this, activityForResult)
+                    VPAuth.login(this, activityForResult)
                 }
             }
         }

@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.zte.iptvclient.android.auth.presentation.components.Screens
+import com.zte.iptvclient.android.auth.presentation.pages.ForgotPasswordPage
 import com.zte.iptvclient.android.auth.presentation.pages.LoginScreen
 import com.zte.iptvclient.android.auth.presentation.pages.RegisterScreen
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackround
@@ -72,99 +73,108 @@ internal class AuthActivity : ComponentActivity() {
                     val context = LocalContext.current
                     NavHost(
                         navController = navController,
-                        startDestination = Screens.Register.route,
+                        startDestination = Screens.Login.route,
                     ) {
-                        composable(
-                            route = Screens.Register.route,
-                            enterTransition = {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                                    animationSpec = tween(100)
-                                )
-                            },
-                            exitTransition = {
-                                slideOutOfContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                                    animationSpec = tween(100)
-                                )
-                            },
-                            popEnterTransition = {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                                    animationSpec = tween(100)
-                                )
-                            },
-                            popExitTransition = {
-                                slideOutOfContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                                    animationSpec = tween(100)
-                                )
-                            }) {
+                        composable(route = Screens.Register.route, enterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                animationSpec = tween(100)
+                            )
+                        }, exitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                animationSpec = tween(100)
+                            )
+                        }, popEnterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                animationSpec = tween(100)
+                            )
+                        }, popExitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                animationSpec = tween(100)
+                            )
+                        }) {
                             RegisterScreen(
                                 clickBack = {
                                     finish()
-                                },
-                                navController = navController
+                                }, navController = navController
                             )
                         }
-                        composable(
-                            route = Screens.Login.route,
-                            enterTransition = {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                                    animationSpec = tween(100)
-                                )
-                            },
-                            exitTransition = {
-                                slideOutOfContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
-                                    animationSpec = tween(100)
-                                )
-                            },
-                            popEnterTransition = {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                                    animationSpec = tween(100)
-                                )
-                            },
-                            popExitTransition = {
-                                slideOutOfContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
-                                    animationSpec = tween(100)
-                                )
-                            }) {
-                            LoginScreen(
-                                clickGoogle = {
-                                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                        .requestIdToken(BuildConfig.GOOGLE_SIGN_TOKEN)
-                                        .requestEmail()
-                                        .build()
-                                    val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(context, gso)
-                                    val account = GoogleSignIn.getLastSignedInAccount(context)
-                                    if (account == null) {
-                                        val signInIntent = googleSignInClient.signInIntent
-                                        signInLauncher.launch(signInIntent)
+                        composable(route = Screens.Login.route, enterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                animationSpec = tween(100)
+                            )
+                        }, exitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                animationSpec = tween(100)
+                            )
+                        }, popEnterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                animationSpec = tween(100)
+                            )
+                        }, popExitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                animationSpec = tween(100)
+                            )
+                        }) {
+                            LoginScreen(clickGoogle = {
+                                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .requestIdToken(BuildConfig.GOOGLE_SIGN_TOKEN).requestEmail().build()
+                                val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(context, gso)
+                                val account = GoogleSignIn.getLastSignedInAccount(context)
+                                if (account == null) {
+                                    val signInIntent = googleSignInClient.signInIntent
+                                    signInLauncher.launch(signInIntent)
+                                }
+                            }, callbackManager = callbackManager, onLoginResult = { loginResult ->
+                                if (loginResult != null) {
+                                    val intent = Intent().apply {
+                                        putExtra("token", loginResult.accessToken.token)
                                     }
-                                },
-                                callbackManager = callbackManager,
-                                onLoginResult = { loginResult ->
-                                    if (loginResult != null) {
-                                        val intent = Intent().apply {
-                                            putExtra("token", loginResult.accessToken.token)
-                                        }
-                                        setResult(Result.SUCCESS, intent)
-                                        finish()
-                                    } else {
-                                        val intent = Intent().apply {
-                                            putExtra("failed", "facebook login failed")
-                                        }
-                                        setResult(Result.FAILED, intent)
-                                    }
-                                },
-                                clickBack = {
+                                    setResult(Result.SUCCESS, intent)
                                     finish()
-                                },
-                                navController = navController
+                                } else {
+                                    val intent = Intent().apply {
+                                        putExtra("failed", "facebook login failed")
+                                    }
+                                    setResult(Result.FAILED, intent)
+                                }
+                            }, clickBack = {
+                                finish()
+                            }, navController = navController
+                            )
+                        }
+
+                        //Forgot Password
+                        composable(route = Screens.Forgot.route, enterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                animationSpec = tween(100)
+                            )
+                        }, exitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                                animationSpec = tween(100)
+                            )
+                        }, popEnterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                animationSpec = tween(100)
+                            )
+                        }, popExitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                                animationSpec = tween(100)
+                            )
+                        }) {
+                            ForgotPasswordPage(
+                                 navController = navController
                             )
                         }
                     }

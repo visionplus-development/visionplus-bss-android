@@ -115,7 +115,7 @@ fun TextFieldPhoneNumber(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .padding(10.dp)
-                                .size(25.dp)
+                                .size(width = 25.dp, height = 20.dp)
                         )
                         Text(
                             text = "+62",
@@ -131,11 +131,9 @@ fun TextFieldPhoneNumber(
                 },
                 placeholder = {
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "Phone Number",
-                        color = ColorTextSecondary,
-                        fontSize = 12.sp,
-                        maxLines = 1,
+                        text = "Phone number (ex: 085812345678)",
+                        color = Color(0xFF919999),
+                        fontSize = 12.sp
                     )
                 },
                 onValueChange = {
