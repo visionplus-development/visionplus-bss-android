@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
 import com.zte.iptvclient.android.auth.presentation.components.TextFieldPassword
 import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
@@ -53,10 +54,10 @@ fun CreateNewPasswordPage() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 20.dp, horizontal = 12.dp),
-                        label = "Enter Email",
+                        label = "Enter New Password",
+                        inputWrapper = InputWrapper(password, null),
                         placeHolder = "e.g. placeholder",
                         isEnabled = true,
-                        password = password,
                         onPasswordChange = {
                             password = it
                         }

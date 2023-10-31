@@ -18,7 +18,7 @@ import com.zte.iptvclient.android.auth.presentation.theme.ColorTextButtonDisable
 
 @Composable
 fun ButtonMain(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     text: String,
     isEnabled: Boolean,
     onButtonClick: () -> Unit

@@ -28,4 +28,6 @@
     <string name="label_click_link">click Link</string>
     <string name="placeholder_password">e.g. placeholder</string>
     <string name="verify_success">Your email has been verified</string>
+    <string name="verify_link_expired">Link has expired</string>
+    <string name="retry_link_verification">Verification link has been expired, please try to request a new one.</string>
 </resources>
