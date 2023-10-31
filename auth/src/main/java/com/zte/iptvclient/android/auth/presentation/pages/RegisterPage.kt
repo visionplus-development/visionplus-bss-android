@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zte.iptvclient.android.auth.R
+import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
 import com.zte.iptvclient.android.auth.presentation.components.Screens
 import com.zte.iptvclient.android.auth.presentation.components.TabForm
@@ -178,7 +179,7 @@ internal fun PhoneRegister(
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_phone_number),
             isEnabled = true,
-            phoneNumber = phoneNumber,
+            inputWrapper = InputWrapper(phoneNumber,null),
             onPhoneNumberChange = { value ->
                 phoneNumber = value
                 onPhoneNumberResult(phoneNumber)
@@ -191,7 +192,7 @@ internal fun PhoneRegister(
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_password),
             isEnabled = phoneNumber.isNotEmpty(),
-            password = password,
+            inputWrapper = InputWrapper(password, null),
             placeHolder = "e.g placeholder",
             onPasswordChange = { value ->
                 password = if (phoneNumber.isEmpty()) {
@@ -276,7 +277,7 @@ internal fun EmailRegister(
                 .fillMaxWidth()
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_email),
-            value = email,
+            inputWrapper = InputWrapper(email,null),
             onValueChange = { value ->
                 email = value
                 onEmailResult(email)
@@ -288,7 +289,7 @@ internal fun EmailRegister(
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_password),
             isEnabled = email.isNotEmpty(),
-            password = password,
+            inputWrapper = InputWrapper(password, null),
             placeHolder = "e.g placeholder",
             onPasswordChange = { value ->
                 password = if (email.isEmpty()) {
