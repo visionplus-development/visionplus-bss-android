@@ -1,5 +1,6 @@
 package com.zte.iptvclient.android.auth.presentation.components
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -36,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundTextField
@@ -43,6 +46,7 @@ import com.zte.iptvclient.android.auth.presentation.theme.ColorError
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
+import com.zte.iptvclient.android.auth.utils.DeviceProperties
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,13 +58,21 @@ fun TextFieldPhoneNumber(
     onPhoneNumberChange: (String) -> Unit,
 ) {
 
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val fieldValue = remember { mutableStateOf(inputWrapper.value) }
     val fieldError = remember { mutableStateOf(inputWrapper.errorMessage) }
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
+
     val countries = listOf(
         Country("Indonesia", "62", R.drawable.ic_flag_indonesia),
         Country("Malaysia", "60", R.drawable.ic_flag_malaysia)
     )
+
+    val selectedCountry = remember { mutableStateOf<Country?>(Country("Indonesia", "62", R.drawable.ic_flag_indonesia)) }
+
     val showBottomSheet = remember { mutableStateOf(false) }
 
     VisionplusbssandroidTheme {
@@ -72,7 +84,7 @@ fun TextFieldPhoneNumber(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 text = label,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = mediumFontSize.sp),
                 color = if (isEnabled) ColorTextPrimary else ColorTextSecondary,
                 textAlign = TextAlign.Start
             )
@@ -89,7 +101,7 @@ fun TextFieldPhoneNumber(
                 shape = RoundedCornerShape(8.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = ColorBackgroundTextField,
-                    cursorColor = Color.Black,
+                    cursorColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedTextColor = ColorTextPrimary,
@@ -97,10 +109,7 @@ fun TextFieldPhoneNumber(
                 ),
                 maxLines = 1,
                 value = inputWrapper.value,
-                textStyle = TextStyle(
-                    color = ColorTextPrimary,
-                    fontSize = 12.sp
-                ),
+                textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = mediumFontSize.sp),
                 singleLine = true,
                 leadingIcon = {
                     Row(
@@ -110,7 +119,10 @@ fun TextFieldPhoneNumber(
                         }
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.ic_flag_indonesia),
+                            painter = painterResource(
+                                id = selectedCountry.value.let { country ->
+                                    country?.flag
+                                } ?: countries[0].flag),
                             contentDescription = "",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -118,9 +130,13 @@ fun TextFieldPhoneNumber(
                                 .size(width = 25.dp, height = 20.dp)
                         )
                         Text(
-                            text = "+62",
+                            text = "+${
+                                selectedCountry.value.let { country ->
+                                    country?.code
+                                } ?: countries[0].code
+                            }",
                             color = ColorTextSecondary,
-                            fontSize = 12.sp
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = smallFontSize.sp)
                         )
                         Icon(
                             imageVector = Icons.Filled.ArrowDropDown,
@@ -133,7 +149,7 @@ fun TextFieldPhoneNumber(
                     Text(
                         text = "Phone number (ex: 085812345678)",
                         color = Color(0xFF919999),
-                        fontSize = 12.sp
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = smallFontSize.sp)
                     )
                 },
                 onValueChange = {
@@ -153,7 +169,7 @@ fun TextFieldPhoneNumber(
                         .fillMaxWidth()
                         .padding(top = 6.dp),
                     text = fieldError.value.orEmpty(),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = smallFontSize.sp),
                     color = ColorError,
                     textAlign = TextAlign.Start,
                 )
@@ -162,7 +178,9 @@ fun TextFieldPhoneNumber(
                 BottomSheetCountry(
                     countries = countries,
                     onShowBottomSheet = { showBottomSheet.value = false },
-                    onCountrySelected = {}
+                    onCountrySelected = { value ->
+                        selectedCountry.value = value
+                    }
                 )
             }
         }

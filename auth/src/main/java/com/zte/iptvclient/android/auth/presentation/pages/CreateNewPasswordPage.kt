@@ -20,14 +20,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
+import com.zte.iptvclient.android.auth.presentation.components.ConfigLayoutDevice
 import com.zte.iptvclient.android.auth.presentation.components.TextFieldPassword
 import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundForm
 
 @Composable
 fun CreateNewPasswordPage() {
-    var password by remember { mutableStateOf("") }
+    ConfigLayoutDevice(
+        screenMobile = { CreateNewPasswordContent() },
+        screenTablet = { CreateNewPasswordContent() }
+        )
+}
 
+@Composable
+fun CreateNewPasswordContent() {
+
+    var password by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
             ToolbarMain(

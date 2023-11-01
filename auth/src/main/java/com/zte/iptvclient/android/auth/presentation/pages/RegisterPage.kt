@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -33,10 +35,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
+import com.zte.iptvclient.android.auth.presentation.components.ConfigLayoutDevice
 import com.zte.iptvclient.android.auth.presentation.components.Screens
 import com.zte.iptvclient.android.auth.presentation.components.TabForm
 import com.zte.iptvclient.android.auth.presentation.components.TextFieldEmail
@@ -58,6 +62,20 @@ internal fun RegisterScreen(
     navController: NavController
 ) {
 
+    BackHandler {
+        clickBack()
+    }
+
+    ConfigLayoutDevice(
+        screenMobile = { RegisterContent(clickBack, navController) },
+        screenTablet = { RegisterContent(clickBack, navController) })
+}
+
+@Composable
+internal fun RegisterContent(
+    clickBack: () -> Unit,
+    navController: NavController
+) {
     var phoneNumber by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var passwordPhoneNumber by remember { mutableStateOf("") }
@@ -68,9 +86,6 @@ internal fun RegisterScreen(
     val isAuthenticationValid = (phoneNumber.isNotEmpty() || email.isNotEmpty()) &&
             (passwordPhoneNumber.isNotEmpty() || passwordEmail.isNotEmpty())
 
-    BackHandler {
-        clickBack()
-    }
     Scaffold(
         containerColor = ColorBackround,
         topBar = {
@@ -99,7 +114,9 @@ internal fun RegisterScreen(
                 TabForm(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 20.dp, horizontal = 12.dp),
+                        .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(ColorBackgroundForm),
                     onTabClick = { value ->
                         positionTab = value
                         phoneNumber = ""
@@ -164,6 +181,7 @@ internal fun PhoneRegister(
 
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val otpValue = remember { mutableStateOf("") }
     var isOtpClicked by rememberSaveable { mutableStateOf(false) }
 
     Column(
@@ -179,7 +197,7 @@ internal fun PhoneRegister(
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_phone_number),
             isEnabled = true,
-            inputWrapper = InputWrapper(phoneNumber,null),
+            inputWrapper = InputWrapper(phoneNumber, null),
             onPhoneNumberChange = { value ->
                 phoneNumber = value
                 onPhoneNumberResult(phoneNumber)
@@ -248,10 +266,15 @@ internal fun PhoneRegister(
 
         TextFieldOTP(
             modifier = Modifier.fillMaxWidth(),
-            isEnabled = true,
-            otpText = "",
+            isEnabled = phoneNumber.isNotEmpty() && password.isNotEmpty(),
+            otpText = otpValue.value,
             onOtpTextChange = { value, _ ->
-
+                if (value.isDigitsOnly() &&
+                    phoneNumber.isNotEmpty() &&
+                    password.isNotEmpty()
+                ) {
+                    otpValue.value = value
+                }
             })
     }
 }
@@ -277,7 +300,7 @@ internal fun EmailRegister(
                 .fillMaxWidth()
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_email),
-            inputWrapper = InputWrapper(email,null),
+            inputWrapper = InputWrapper(email, null),
             onValueChange = { value ->
                 email = value
                 onEmailResult(email)

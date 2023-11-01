@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zte.iptvclient.android.auth.R
+import com.zte.iptvclient.android.auth.presentation.components.ConfigLayoutDevice
 import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackround
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
@@ -32,32 +33,41 @@ internal fun EmailVerificationPage(
     isSuccess: Boolean = true
 ) {
     VisionplusbssandroidTheme {
-        Scaffold(
-            topBar = {
-                ToolbarMain(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = "Register"
-                ) {
-                }
-            },
-            content = { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .background(ColorBackround),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (isSuccess) {
-                        VerificationSuccess()
-                    } else {
-                        VerificationFailed()
-                    }
+        ConfigLayoutDevice(
+            screenMobile = { EmailVerificationContent(isSuccess)},
+            screenTablet = { EmailVerificationContent(isSuccess)})
+    }
+}
+
+@Composable
+internal fun EmailVerificationContent(
+    isSuccess: Boolean = true
+) {
+    Scaffold(
+        topBar = {
+            ToolbarMain(
+                modifier = Modifier.fillMaxWidth(),
+                title = "Register"
+            ) {
+            }
+        },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .background(ColorBackround),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (isSuccess) {
+                    VerificationSuccess()
+                } else {
+                    VerificationFailed()
                 }
             }
-        )
-    }
+        }
+    )
 }
 
 @Composable

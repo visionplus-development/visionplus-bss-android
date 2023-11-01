@@ -16,9 +16,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
+import com.zte.iptvclient.android.auth.utils.DeviceProperties
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +31,12 @@ fun ToolbarMain(
     title: String,
     onBackClick: () -> Unit
 ) {
+
+    val context = LocalContext.current
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
+
     VisionplusbssandroidTheme {
         Column(
             modifier = modifier
@@ -38,7 +48,7 @@ fun ToolbarMain(
                 title = {
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium.copy(fontSize = mediumFontSize.sp),
                         color = Color.White
                     )
                 },

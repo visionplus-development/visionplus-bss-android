@@ -12,18 +12,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.presentation.theme.ColorDivider
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
+import com.zte.iptvclient.android.auth.utils.DeviceProperties
 
 @Composable
 fun TextDivider(
     modifier: Modifier,
     text: String
 ) {
+
+    val context = LocalContext.current
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
+
     VisionplusbssandroidTheme {
         Row(
             modifier = modifier,
@@ -39,7 +49,7 @@ fun TextDivider(
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = text,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = smallFontSize.sp),
                 color = ColorTextPrimary,
                 textAlign = TextAlign.Center
             )

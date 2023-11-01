@@ -7,14 +7,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.presentation.theme.ColorPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
+import com.zte.iptvclient.android.auth.utils.DeviceProperties
 
 @Composable
 fun TextSwitchAuth(
@@ -23,6 +24,12 @@ fun TextSwitchAuth(
     actionText: String,
     onTextClick: () -> Unit
 ) {
+
+    val context = LocalContext.current
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
+
     VisionplusbssandroidTheme {
         Row(
             modifier = modifier,
@@ -30,17 +37,14 @@ fun TextSwitchAuth(
         ) {
             Text(
                 text = questionText,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = smallFontSize.sp),
                 color = ColorTextSecondary,
             )
             ClickableText(
                 text = AnnotatedString(actionText),
-                style = TextStyle(
+                style = MaterialTheme.typography.labelSmall.copy(
                     color = ColorPrimary,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.W500,
-                    lineHeight = 15.sp,
-                    letterSpacing = 0.5.sp
+                    fontSize = smallFontSize.sp
                 ),
                 onClick = {
                     onTextClick()

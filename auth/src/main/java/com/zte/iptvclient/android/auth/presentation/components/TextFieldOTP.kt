@@ -10,17 +10,19 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundTextField
 import com.zte.iptvclient.android.auth.presentation.theme.ColorDivider
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
@@ -33,6 +35,7 @@ fun TextFieldOTP(
     isEnabled: Boolean = true,
     onOtpTextChange: (String, Boolean) -> Unit
 ) {
+
     BasicTextField(
         modifier = modifier,
         value = TextFieldValue(otpText, selection = TextRange(otpText.length)),
@@ -65,6 +68,9 @@ private fun CharView(
     index: Int,
     text: String
 ) {
+
+    val context = LocalContext.current
+
     val char = when {
         index >= text.length -> "-"
         else -> text[index].toString()
@@ -80,8 +86,7 @@ private fun CharView(
             )
             .wrapContentSize(),
         text = char,
-        fontSize = 22.sp,
-        fontWeight = FontWeight.W400,
+        style = MaterialTheme.typography.labelLarge.copy(fontSize = if (isTablet(context)) 26.sp else 22.sp),
         color = if (char == "-") ColorDivider else ColorTextPrimary,
     )
 }

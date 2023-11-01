@@ -9,12 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import com.zte.iptvclient.android.auth.presentation.pages.ForgotPasswordPage
-import com.zte.iptvclient.android.auth.presentation.theme.ColorPrimary
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
 
@@ -24,13 +21,11 @@ fun ConfigLayoutDevice(
     screenTablet: @Composable () -> Unit
 ) {
     VisionplusbssandroidTheme {
-        val configuration = LocalConfiguration.current
-        val isTablet = configuration.screenWidthDp >= 840
 
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            if (isTablet) {
+            if (isTablet(LocalContext.current)) {
                 TabletLayout(screenTablet)
             } else {
                 MobileLayout(screenMobile)
@@ -69,15 +64,16 @@ fun MobileLayout(screenMobile: @Composable () -> Unit) {
 
 @Preview(
     showBackground = true,
-    device = "id:pixel_c", widthDp = 960, heightDp = 600)
+    device = "id:pixel_c", widthDp = 960, heightDp = 600
+)
 @Composable
 fun ConfigLayoutDevicePreview() {
     ConfigLayoutDevice(
         screenMobile = {
-            Text("mobile",color = ColorTextSecondary)
+            Text("mobile", color = ColorTextSecondary)
         },
         screenTablet = {
-            Text("tablet",color = ColorTextSecondary)
+            Text("tablet", color = ColorTextSecondary)
         }
     )
 }

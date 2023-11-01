@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -21,11 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundForm
 import com.zte.iptvclient.android.auth.presentation.theme.ColorPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
+import com.zte.iptvclient.android.auth.utils.DeviceProperties
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -40,6 +45,10 @@ fun TabForm(
 
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState { 2 }
+    val context = LocalContext.current
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
 
     val tabRowItems = listOf(
         FormTabItem(
@@ -74,6 +83,7 @@ fun TabForm(
                     text = {
                         Text(
                             title.title,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = mediumFontSize.sp),
                             color = if (isActive.intValue == index) ColorPrimary else ColorTextSecondary
                         )
                     },
