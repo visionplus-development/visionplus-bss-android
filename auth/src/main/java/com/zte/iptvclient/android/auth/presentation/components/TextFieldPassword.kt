@@ -45,7 +45,7 @@ fun TextFieldPassword(
     label: String,
     inputWrapper: InputWrapper,
     placeHolder: String,
-    isEnabled: Boolean,
+    isEnabled: Boolean = true,
     onPasswordChange: (String) -> Unit,
 ) {
     val passwordVisible = rememberSaveable { mutableStateOf(false) }
@@ -84,6 +84,7 @@ fun TextFieldPassword(
                     fieldValue.value = it
                     onPasswordChange(it)
                 },
+                enabled = isEnabled,
                 placeholder = {
                     Text(
                         text = placeHolder,
@@ -111,7 +112,7 @@ fun TextFieldPassword(
 
                     IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
                         Icon(
-                            painter = image,
+                            painter = if (isEnabled) image else painterResource(id = R.drawable.ic_visibility_off),
                             "switch password visibility",
                             Modifier.size(24.dp),
                             tint = ColorTextSecondary
