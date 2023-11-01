@@ -32,6 +32,7 @@ import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundTextField
 import com.zte.iptvclient.android.auth.presentation.theme.ColorError
+import com.zte.iptvclient.android.auth.presentation.theme.ColorErrorBorder
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
@@ -70,7 +71,7 @@ fun TextFieldPassword(
             )
 
             val borderModifier = if (fieldValue.value == "error") {
-                Modifier.border(1.dp, ColorError, RoundedCornerShape(8.dp))
+                Modifier.border(1.dp, ColorErrorBorder, RoundedCornerShape(8.dp))
             } else {
                 Modifier
             }
