@@ -19,12 +19,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundTextField
@@ -33,6 +36,7 @@ import com.zte.iptvclient.android.auth.presentation.theme.ColorErrorBorder
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
+import com.zte.iptvclient.android.auth.utils.DeviceProperties
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +51,10 @@ fun TextFieldPassword(
     val passwordVisible = rememberSaveable { mutableStateOf(false) }
     val fieldValue = remember { mutableStateOf(inputWrapper.value) }
     val fieldError = remember { mutableStateOf(inputWrapper.errorMessage) }
+    val context = LocalContext.current
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
 
     VisionplusbssandroidTheme {
         Column(
@@ -57,7 +65,7 @@ fun TextFieldPassword(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 text = label,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = mediumFontSize.sp),
                 color = if (isEnabled) ColorTextPrimary else ColorTextSecondary,
                 textAlign = TextAlign.Start
             )
@@ -79,11 +87,11 @@ fun TextFieldPassword(
                 placeholder = {
                     Text(
                         text = placeHolder,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = smallFontSize.sp),
                         color = ColorTextSecondary
                     )
                 },
-                textStyle = MaterialTheme.typography.bodyMedium,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = mediumFontSize.sp),
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = ColorBackgroundTextField,
                     cursorColor = Color.White,
@@ -120,7 +128,7 @@ fun TextFieldPassword(
                         .fillMaxWidth()
                         .padding(top = 6.dp),
                     text = fieldError.value.orEmpty(),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = smallFontSize.sp),
                     color = ColorError,
                     textAlign = TextAlign.Start,
                 )

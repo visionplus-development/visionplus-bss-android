@@ -8,19 +8,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
+import com.zte.iptvclient.android.auth.utils.DeviceProperties
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +34,12 @@ fun IconButton(
     text: String,
     onButtonClick: () -> Unit
 ) {
+
+    val context = LocalContext.current
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -50,8 +60,7 @@ fun IconButton(
             text = text,
             modifier = Modifier.padding(top = 8.dp),
             color = ColorTextSecondary,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.W600
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = smallFontSize.sp)
         )
     }
 }

@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,13 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,9 +37,11 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.google.android.gms.common.util.DeviceProperties.isTablet
 import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
+import com.zte.iptvclient.android.auth.presentation.components.ConfigLayoutDevice
 import com.zte.iptvclient.android.auth.presentation.components.Screens
 import com.zte.iptvclient.android.auth.presentation.components.TabForm
 import com.zte.iptvclient.android.auth.presentation.components.TextDivider
@@ -50,10 +53,44 @@ import com.zte.iptvclient.android.auth.presentation.components.ToolbarMain
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackgroundForm
 import com.zte.iptvclient.android.auth.presentation.theme.ColorBackround
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
+import com.zte.iptvclient.android.auth.utils.DeviceProperties
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun LoginScreen(
+    clickGoogle: () -> Unit,
+    callbackManager: CallbackManager,
+    onLoginResult: (loginResult: LoginResult?) -> Unit,
+    clickBack: () -> Unit,
+    navController: NavController
+) {
+    BackHandler {
+        clickBack()
+    }
+
+    ConfigLayoutDevice(
+        screenMobile = {
+            LoginContent(
+                clickGoogle,
+                callbackManager,
+                onLoginResult,
+                clickBack,
+                navController
+            )
+        },
+        screenTablet = {
+            LoginContent(
+                clickGoogle,
+                callbackManager,
+                onLoginResult,
+                clickBack,
+                navController
+            )
+        })
+}
+
+@Composable
+internal fun LoginContent(
     clickGoogle: () -> Unit,
     callbackManager: CallbackManager,
     onLoginResult: (loginResult: LoginResult?) -> Unit,
@@ -70,10 +107,6 @@ internal fun LoginScreen(
 
     val isAuthenticationValid = (phoneNumber.isNotEmpty() || email.isNotEmpty()) &&
             (passwordPhoneNumber.isNotEmpty() || passwordEmail.isNotEmpty())
-
-    BackHandler {
-        clickBack()
-    }
 
     Scaffold(
         containerColor = ColorBackround,
@@ -127,7 +160,9 @@ internal fun LoginScreen(
                 TabForm(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 20.dp, horizontal = 12.dp),
+                        .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(ColorBackgroundForm),
                     onTabClick = { value ->
                         positionTab = value
                         phoneNumber = ""
@@ -177,6 +212,11 @@ internal fun PhoneLogin(
     navController: NavController
 ) {
 
+    val context = LocalContext.current
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
+
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -221,11 +261,10 @@ internal fun PhoneLogin(
         ClickableText(
             modifier = Modifier.fillMaxWidth(),
             text = AnnotatedString(stringResource(id = R.string.label_forgot_password)),
-            style = TextStyle(
-                color = ColorTextSecondary,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.W600,
-                textAlign = TextAlign.End
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = mediumFontSize.sp,
+                textAlign = TextAlign.End,
+                color = ColorTextSecondary
             ),
             onClick = {
                 navController.navigate(Screens.Forgot.route)
@@ -240,6 +279,10 @@ internal fun EmailLogin(
     onPasswordResult: (String) -> Unit,
     navController: NavController
 ) {
+    val context = LocalContext.current
+    val largeFontSize = DeviceProperties.LARGE.getFontSize(isTablet(context))
+    val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
+    val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -282,11 +325,10 @@ internal fun EmailLogin(
         ClickableText(
             modifier = Modifier.fillMaxWidth(),
             text = AnnotatedString(stringResource(id = R.string.label_forgot_password)),
-            style = TextStyle(
-                color = ColorTextSecondary,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.W600,
-                textAlign = TextAlign.End
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = mediumFontSize.sp,
+                textAlign = TextAlign.End,
+                color = ColorTextSecondary
             ),
             onClick = {
                 navController.navigate(Screens.Forgot.route)
