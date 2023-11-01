@@ -28,8 +28,8 @@ import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTh
 fun ErrorDialog(
     dialogWrapper: DialogWrapper,
     setShowDialog: (Boolean) -> Unit,
-    onPositiveClick: () -> Unit,
-    onNegativeClick: () -> Unit
+    onPositiveClick: (() -> Unit)? = null,
+    onNegativeClick: (() -> Unit)? = null
 ) {
     VisionplusbssandroidTheme {
         Dialog(onDismissRequest = { setShowDialog(false) }) {
@@ -56,25 +56,31 @@ fun ErrorDialog(
                         style = MaterialTheme.typography.labelSmall,
                         color = ColorTextSecondary
                     )
-                    ButtonMain(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        text = dialogWrapper.textPositive,
-                        isEnabled = true
-                    ) {
-                        setShowDialog(false)
-                        onPositiveClick()
+
+                    // CTA negative shown for server 500.
+                    if (dialogWrapper.textPositive.isNotEmpty()) {
+                        ButtonMain(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            text = dialogWrapper.textPositive,
+                            isEnabled = true
+                        ) {
+                            setShowDialog(false)
+                            onPositiveClick?.invoke()
+                        }
                     }
 
-                    ClickableText(
-                        text = AnnotatedString(dialogWrapper.textNegative),
-                        style = MaterialTheme.typography.titleMedium.copy(ColorPrimary),
-                        onClick = {
-                            setShowDialog(false)
-                            onNegativeClick()
-                        }
-                    )
+                    if (dialogWrapper.textNegative.isNotEmpty()) {
+                        ClickableText(
+                            text = AnnotatedString(dialogWrapper.textNegative),
+                            style = MaterialTheme.typography.titleMedium.copy(ColorPrimary),
+                            onClick = {
+                                setShowDialog(false)
+                                onNegativeClick?.invoke()
+                            }
+                        )
+                    }
                 }
             }
         }

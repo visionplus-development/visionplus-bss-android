@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
+import com.zte.iptvclient.android.auth.R
 import com.zte.iptvclient.android.auth.data.model.InputWrapper
 import com.zte.iptvclient.android.auth.presentation.components.ButtonMain
 import com.zte.iptvclient.android.auth.presentation.components.TabForm
@@ -54,6 +55,8 @@ import com.zte.iptvclient.android.auth.presentation.theme.ColorTextButtonDisable
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextPrimary
 import com.zte.iptvclient.android.auth.presentation.theme.ColorTextSecondary
 import com.zte.iptvclient.android.auth.presentation.theme.VisionplusbssandroidTheme
+import com.zte.iptvclient.android.auth.utils.NetworkUtils
+import com.zte.iptvclient.android.auth.utils.ViewUtils
 
 @Composable
 fun ForgotPasswordPage(navController: NavController) {
@@ -62,6 +65,7 @@ fun ForgotPasswordPage(navController: NavController) {
     val isOtpClicked = rememberSaveable { mutableStateOf(false) }
     val otpValue = remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
+    val context= LocalContext.current
 
     BackHandler {
         navController.popBackStack()
@@ -105,7 +109,7 @@ fun ForgotPasswordPage(navController: NavController) {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(
-                                            horizontal = 16.dp,
+                                            horizontal = 12.dp,
                                             vertical = 16.dp
                                         ),
                                 ) {
@@ -283,6 +287,12 @@ fun ForgotPasswordPage(navController: NavController) {
                     text = "Next",
                     isEnabled = otpValue.value.length == 4
                 ) {
+                    // todo: check connection in retrofit interceptor
+                    if (NetworkUtils.isConnect(context)) {
+                        // todo: request BE
+                    } else {
+                        ViewUtils.showToast(context, context.getString(R.string.error_no_internet))
+                    }
                 }
             }
         )
