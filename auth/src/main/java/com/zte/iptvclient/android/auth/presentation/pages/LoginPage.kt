@@ -217,7 +217,7 @@ internal fun PhoneLogin(
     val mediumFontSize = DeviceProperties.MEDIUM.getFontSize(isTablet(context))
     val smallFontSize = DeviceProperties.SMALL.getFontSize(isTablet(context))
 
-    var phoneNumber by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
@@ -233,10 +233,10 @@ internal fun PhoneLogin(
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_phone_number),
             isEnabled = true,
-            inputWrapper = InputWrapper(phoneNumber, null),
+            inputWrapper = InputWrapper(phone, null),
             onPhoneNumberChange = { value ->
-                phoneNumber = value
-                onPhoneNumberResult(phoneNumber)
+                phone = value
+                onPhoneNumberResult(phone)
             }
         )
 
@@ -245,11 +245,11 @@ internal fun PhoneLogin(
                 .fillMaxWidth()
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_password),
-            isEnabled = phoneNumber.isNotEmpty(),
+            isEnabled = phone.isNotEmpty(),
             inputWrapper = InputWrapper(password, null),
-            placeHolder = "e.g placeholder",
+            placeHolder = stringResource(id = R.string.placeholder_password),
             onPasswordChange = { value ->
-                password = if (phoneNumber.isEmpty()) {
+                password = if (phone.isEmpty()) {
                     ""
                 } else {
                     value
@@ -311,7 +311,7 @@ internal fun EmailLogin(
             label = stringResource(id = R.string.label_enter_password),
             isEnabled = email.isNotEmpty(),
             inputWrapper = InputWrapper(password, null),
-            placeHolder = "e.g placeholder",
+            placeHolder = stringResource(id = R.string.placeholder_password),
             onPasswordChange = { value ->
                 password = if (email.isEmpty()) {
                     ""

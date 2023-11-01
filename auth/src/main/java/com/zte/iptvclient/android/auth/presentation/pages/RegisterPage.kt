@@ -76,14 +76,14 @@ internal fun RegisterContent(
     clickBack: () -> Unit,
     navController: NavController
 ) {
-    var phoneNumber by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var passwordPhoneNumber by remember { mutableStateOf("") }
     var passwordEmail by remember { mutableStateOf("") }
     var positionTab by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
 
-    val isAuthenticationValid = (phoneNumber.isNotEmpty() || email.isNotEmpty()) &&
+    val isAuthenticationValid = (phone.isNotEmpty() || email.isNotEmpty()) &&
             (passwordPhoneNumber.isNotEmpty() || passwordEmail.isNotEmpty())
 
     Scaffold(
@@ -119,7 +119,7 @@ internal fun RegisterContent(
                         .background(ColorBackgroundForm),
                     onTabClick = { value ->
                         positionTab = value
-                        phoneNumber = ""
+                        phone = ""
                         email = ""
                         passwordPhoneNumber = ""
                         passwordEmail = ""
@@ -127,7 +127,7 @@ internal fun RegisterContent(
                     tabPhone = {
                         PhoneRegister(
                             onPhoneNumberResult = { value ->
-                                phoneNumber = value
+                                phone = value
                             },
                             onPasswordResult = { value ->
                                 passwordPhoneNumber = value
@@ -163,7 +163,7 @@ internal fun RegisterContent(
                 isEnabled = isAuthenticationValid,
                 onButtonClick = {
                     if (positionTab == 0) {
-                        Toast.makeText(context, "$phoneNumber,$passwordPhoneNumber", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "$phone,$passwordPhoneNumber", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(context, "$email,$passwordEmail", Toast.LENGTH_SHORT).show()
                     }
@@ -179,7 +179,7 @@ internal fun PhoneRegister(
     onPasswordResult: (String) -> Unit
 ) {
 
-    var phoneNumber by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val otpValue = remember { mutableStateOf("") }
     var isOtpClicked by rememberSaveable { mutableStateOf(false) }
@@ -197,10 +197,10 @@ internal fun PhoneRegister(
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_phone_number),
             isEnabled = true,
-            inputWrapper = InputWrapper(phoneNumber, null),
+            inputWrapper = InputWrapper(phone, null),
             onPhoneNumberChange = { value ->
-                phoneNumber = value
-                onPhoneNumberResult(phoneNumber)
+                phone = value
+                onPhoneNumberResult(phone)
             }
         )
 
@@ -209,11 +209,11 @@ internal fun PhoneRegister(
                 .fillMaxWidth()
                 .padding(bottom = 32.dp),
             label = stringResource(id = R.string.label_enter_password),
-            isEnabled = phoneNumber.isNotEmpty(),
+            isEnabled = phone.isNotEmpty(),
             inputWrapper = InputWrapper(password, null),
-            placeHolder = "e.g placeholder",
+            placeHolder = stringResource(id = R.string.placeholder_password),
             onPasswordChange = { value ->
-                password = if (phoneNumber.isEmpty()) {
+                password = if (phone.isEmpty()) {
                     ""
                 } else {
                     value
@@ -232,7 +232,7 @@ internal fun PhoneRegister(
             Text(
                 text = "Get OTP or Link Click",
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (phoneNumber.isNotEmpty() && password.isNotEmpty()) ColorTextPrimary else ColorTextSecondary,
+                color = if (phone.isNotEmpty() && password.isNotEmpty()) ColorTextPrimary else ColorTextSecondary,
                 textAlign = TextAlign.Start
             )
             val countdownString = buildAnnotatedString {
@@ -253,12 +253,12 @@ internal fun PhoneRegister(
                 ClickableText(
                     text = AnnotatedString("Send OTP"),
                     style = TextStyle(
-                        color = if (phoneNumber.isNotEmpty() && password.isNotEmpty()) ColorPrimary else ColorTextButtonDisable,
+                        color = if (phone.isNotEmpty() && password.isNotEmpty()) ColorPrimary else ColorTextButtonDisable,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.W600
                     ),
                     onClick = {
-                        if (phoneNumber.isNotEmpty() && password.isNotEmpty()) isOtpClicked = true
+                        if (phone.isNotEmpty() && password.isNotEmpty()) isOtpClicked = true
                     }
                 )
             }
@@ -266,11 +266,11 @@ internal fun PhoneRegister(
 
         TextFieldOTP(
             modifier = Modifier.fillMaxWidth(),
-            isEnabled = phoneNumber.isNotEmpty() && password.isNotEmpty(),
+            isEnabled = phone.isNotEmpty() && password.isNotEmpty(),
             otpText = otpValue.value,
             onOtpTextChange = { value, _ ->
                 if (value.isDigitsOnly() &&
-                    phoneNumber.isNotEmpty() &&
+                    phone.isNotEmpty() &&
                     password.isNotEmpty()
                 ) {
                     otpValue.value = value
@@ -313,7 +313,7 @@ internal fun EmailRegister(
             label = stringResource(id = R.string.label_enter_password),
             isEnabled = email.isNotEmpty(),
             inputWrapper = InputWrapper(password, null),
-            placeHolder = "e.g placeholder",
+            placeHolder = stringResource(id = R.string.placeholder_password),
             onPasswordChange = { value ->
                 password = if (email.isEmpty()) {
                     ""
