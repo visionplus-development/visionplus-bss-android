@@ -69,18 +69,19 @@ fun ForgotPasswordPage(navController: NavController) {
     VisionplusbssandroidTheme {
         ConfigLayoutDevice(
             screenMobile = { ForgotPasswordContent(navController) },
-            screenTablet = { ForgotPasswordContent(navController)})
+            screenTablet = { ForgotPasswordContent(navController) })
     }
 }
+
 @Composable
-fun ForgotPasswordContent(navController: NavController){
+fun ForgotPasswordContent(navController: NavController) {
 
     val email = remember { mutableStateOf("") }
     val phone = remember { mutableStateOf("") }
     val isOtpClicked = rememberSaveable { mutableStateOf(false) }
     val otpValue = remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
-    val context= LocalContext.current
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -119,10 +120,7 @@ fun ForgotPasswordContent(navController: NavController){
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(
-                                        horizontal = 16.dp,
-                                        vertical = 16.dp
-                                    ),
+                                    .padding(vertical = 20.dp, horizontal = 12.dp),
                             ) {
 
 
@@ -160,154 +158,153 @@ fun ForgotPasswordContent(navController: NavController){
                                         }
                                     }
 //                                         todo: check phone requirement. no phone requirement yet
-                                        if (isOtpClicked.value) {
-                                            Text(
-                                                text = countdownString,
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = ColorTextPrimary,
-                                                textAlign = TextAlign.Start
-                                            )
-                                        } else {
-                                            ClickableText(
-                                                text = AnnotatedString("Send OTP"),
-                                                style = TextStyle(
-                                                    color = if (phone.value.isNotEmpty()) ColorPrimary else ColorTextButtonDisable,
-                                                    fontSize = 12.sp,
-                                                    fontWeight = FontWeight.W600
-                                                ),
-                                                onClick = {
-                                                    if (phone.value.isNotEmpty()) isOtpClicked.value = true
-                                                }
-                                            )
-                                        }
-                                    }
-                                    TextFieldOTP(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        otpText = otpValue.value,
-                                        // todo: requirement TBD, need BE integration
-                                        isEnabled = phone.value.isNotEmpty(),
-                                        onOtpTextChange = { value, _ ->
-                                            if (value.isDigitsOnly() && phone.value.isNotEmpty()) {
-                                                otpValue.value = value
-                                            }
-                                        }
-                                    )
-                                }
-                            },
-                            tabEmail = {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 16.dp
-                                        )
-                                ) {
-                                    TextFieldEmail(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(bottom = 32.dp),
-                                        label = "Email",
-                                        inputWrapper = InputWrapper(email.value, null),
-                                        onValueChange = { value ->
-                                            email.value = value
-                                        },
-                                        keyboardOptions = remember {
-                                            KeyboardOptions(
-                                                keyboardType = KeyboardType.Email,
-                                                imeAction = ImeAction.Next
-                                            )
-                                        },
-                                        keyboardActions = KeyboardActions(
-                                            onNext = { focusManager.moveFocus(FocusDirection.Next) }
-                                        )
-                                    )
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(bottom = 8.dp),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                    if (isOtpClicked.value) {
                                         Text(
-                                            text = "Get OTP or Link Click",
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = if (email.value.isNotEmpty()) ColorTextPrimary else ColorTextSecondary,
+                                            text = countdownString,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = ColorTextPrimary,
                                             textAlign = TextAlign.Start
                                         )
-                                        val countdownString = buildAnnotatedString {
-                                            append("Send after")
-                                            withStyle(style = SpanStyle(ColorPrimary)) {
-                                                append(" ")
+                                    } else {
+                                        ClickableText(
+                                            text = AnnotatedString("Send OTP"),
+                                            style = TextStyle(
+                                                color = if (phone.value.isNotEmpty()) ColorPrimary else ColorTextButtonDisable,
+                                                fontSize = 12.sp,
+                                                fontWeight = FontWeight.W600
+                                            ),
+                                            onClick = {
+                                                if (phone.value.isNotEmpty()) isOtpClicked.value = true
                                             }
-                                        }
-                                        // todo: check email requirement. no email requirement yet
-                                        if (isOtpClicked.value) {
-                                            Text(
-                                                text = countdownString,
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = ColorTextPrimary,
-                                                textAlign = TextAlign.Start
-                                            )
-                                        } else {
-                                            ClickableText(
-                                                text = AnnotatedString("Send OTP"),
-                                                style = TextStyle(
-                                                    color = if (email.value.isNotEmpty()) ColorPrimary else ColorTextButtonDisable,
-                                                    fontSize = 12.sp,
-                                                    fontWeight = FontWeight.W600
-                                                ),
-                                                onClick = {
-                                                    if (email.value.isNotEmpty()) isOtpClicked.value = true
-                                                }
-                                            )
+                                        )
+                                    }
+                                }
+                                TextFieldOTP(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    otpText = otpValue.value,
+                                    // todo: requirement TBD, need BE integration
+                                    isEnabled = phone.value.isNotEmpty(),
+                                    onOtpTextChange = { value, _ ->
+                                        if (value.isDigitsOnly() && phone.value.isNotEmpty()) {
+                                            otpValue.value = value
                                         }
                                     }
-                                    TextFieldOTP(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        otpText = otpValue.value,
-                                        // todo: requirement TBD, need BE integration
-                                        isEnabled = email.value.isNotEmpty(),
-                                        onOtpTextChange = { value, _ ->
-                                            if (value.isDigitsOnly() && email.value.isNotEmpty()) {
-                                                otpValue.value = value
-                                            }
-                                        }
-                                    )
-                                }
+                                )
                             }
-                        )
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 42.dp),
-                            text = "We will send the verification code to your email address.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = ColorTextSecondary,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            },
-            bottomBar = {
-                ButtonMain(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Black)
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = "Next",
-                    isEnabled = otpValue.value.length == 4
-                ) {
-                    // todo: check connection in retrofit interceptor
-                    if (NetworkUtils.isConnect(context)) {
-                        // todo: request BE
-                    } else {
-                        ViewUtils.showToast(context, context.getString(R.string.error_no_internet))
-                    }
+                        },
+                        tabEmail = {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = 16.dp,
+                                        vertical = 16.dp
+                                    )
+                            ) {
+                                TextFieldEmail(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 32.dp),
+                                    label = "Email",
+                                    inputWrapper = InputWrapper(email.value, null),
+                                    onValueChange = { value ->
+                                        email.value = value
+                                    },
+                                    keyboardOptions = remember {
+                                        KeyboardOptions(
+                                            keyboardType = KeyboardType.Email,
+                                            imeAction = ImeAction.Next
+                                        )
+                                    },
+                                    keyboardActions = KeyboardActions(
+                                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                                    )
+                                )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 8.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "Get OTP or Link Click",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = if (email.value.isNotEmpty()) ColorTextPrimary else ColorTextSecondary,
+                                        textAlign = TextAlign.Start
+                                    )
+                                    val countdownString = buildAnnotatedString {
+                                        append("Send after")
+                                        withStyle(style = SpanStyle(ColorPrimary)) {
+                                            append(" ")
+                                        }
+                                    }
+                                    // todo: check email requirement. no email requirement yet
+                                    if (isOtpClicked.value) {
+                                        Text(
+                                            text = countdownString,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = ColorTextPrimary,
+                                            textAlign = TextAlign.Start
+                                        )
+                                    } else {
+                                        ClickableText(
+                                            text = AnnotatedString("Send OTP"),
+                                            style = TextStyle(
+                                                color = if (email.value.isNotEmpty()) ColorPrimary else ColorTextButtonDisable,
+                                                fontSize = 12.sp,
+                                                fontWeight = FontWeight.W600
+                                            ),
+                                            onClick = {
+                                                if (email.value.isNotEmpty()) isOtpClicked.value = true
+                                            }
+                                        )
+                                    }
+                                }
+                                TextFieldOTP(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    otpText = otpValue.value,
+                                    // todo: requirement TBD, need BE integration
+                                    isEnabled = email.value.isNotEmpty(),
+                                    onOtpTextChange = { value, _ ->
+                                        if (value.isDigitsOnly() && email.value.isNotEmpty()) {
+                                            otpValue.value = value
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    )
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 42.dp),
+                        text = "We will send the verification code to your email address.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = ColorTextSecondary,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
-        )
-    }
+        },
+        bottomBar = {
+            ButtonMain(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                text = "Next",
+                isEnabled = otpValue.value.length == 4
+            ) {
+                // todo: check connection in retrofit interceptor
+                if (NetworkUtils.isConnect(context)) {
+                    // todo: request BE
+                } else {
+                    ViewUtils.showToast(context, context.getString(R.string.error_no_internet))
+                }
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)
